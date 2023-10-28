@@ -3,6 +3,8 @@
 //FA22-BCS-135 Mohammad Faizan
 //Project Title: Video Game Rental System
 
+//exported to github 28th oct
+
 public class Customer {
     int cnic;
     int phoneNo;

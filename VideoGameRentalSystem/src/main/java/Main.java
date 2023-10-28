@@ -3,8 +3,7 @@
 //FA22-BCS-135 Mohammad Faizan
 //Project Title: Video Game Rental System
 
-//test
-
+//exported to github 28th oct
 
 import java.util.ArrayList;
 import java.util.Scanner;

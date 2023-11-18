@@ -3,17 +3,12 @@
 //FA22-BCS-135 Mohammad Faizan
 //Project Title: Video Game Rental System
 
-//exported to github 28th oct
-//pushed to testBranchFaizan
-
 public class Game {
-    int gameId;
-    String title = new String();
-    String platform = new String();
-    String size = new String();
-    String price = new String();
-
-    public Game () {}
+    private int gameId;
+    private String title = new String();
+    private String platform = new String();
+    private String size = new String();
+    private String price = new String();
 
     public Game(int gameId, String title, String platform, String size, String price) {
         this.gameId = gameId;
@@ -22,7 +17,45 @@ public class Game {
         this.size = size;
         this.price = price;
     }
-    
-    
-    
+
+    public int getGameId() {
+        return this.gameId;
+    }
+
+    public void setGameId(int gameId) {
+        this.gameId = gameId;
+    }
+
+    public String getTitle() {
+        return this.title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getPlatform() {
+        return this.platform;
+    }
+
+    public void setPlatform(String platform) {
+        this.platform = platform;
+    }
+
+    public String getSize() {
+        return this.size;
+    }
+
+    public void setSize(String size) {
+        this.size = size;
+    }
+
+    public String getPrice() {
+        return this.price;
+    }
+
+    public void setPrice(String price) {
+        this.price = price;
+    }
+
 }

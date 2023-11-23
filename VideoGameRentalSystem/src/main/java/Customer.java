@@ -3,32 +3,35 @@
 //FA22-BCS-135 Mohammad Faizan
 //Project Title: Video Game Rental System
 
+import java.util.ArrayList;
+
 public class Customer {
-    private int cnic;
-    private int phoneNo;
+    private String cnic = new String();
+    private String phoneNo = new String();
     private int ongoingRentals;
     private String name = new String();
-
-    public Customer(int cnic, int phoneNo, int ongoingRentals, String name) {
+    static ArrayList<Game> gamesRented = new ArrayList<>();
+    
+    public Customer(String cnic, String phoneNo, int ongoingRentals, String name) {
         this.cnic = cnic;
         this.phoneNo = phoneNo;
         this.ongoingRentals = ongoingRentals;
         this.name = name;
     }
 
-    public int getCnic() {
+    public String getCnic() {
         return this.cnic;
     }
 
-    public void setCnic(int cnic) {
+    public void setCnic(String cnic) {
         this.cnic = cnic;
     }
 
-    public int getPhoneNo() {
+    public String getPhoneNo() {
         return this.phoneNo;
     }
 
-    public void setPhoneNo(int phoneNo) {
+    public void setPhoneNo(String phoneNo) {
         this.phoneNo = phoneNo;
     }
 
@@ -46,5 +49,14 @@ public class Customer {
 
     public void setName(String name) {
         this.name = name;
+    }
+    
+    
+    
+    
+    
+    @Override
+    public String toString() {
+        return "Name: " + this.name + "\nCNIC: " + this.cnic + "\nPhone: " + this.phoneNo + "\nOngoing Rentals: " + this.ongoingRentals + "\n";
     }
 }

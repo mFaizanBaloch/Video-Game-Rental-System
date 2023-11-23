@@ -4,25 +4,29 @@
 //Project Title: Video Game Rental System
 
 public class Game {
-    private int gameId;
+    private String gameId = new String();
     private String title = new String();
     private String platform = new String();
-    private String size = new String();
-    private String price = new String();
+    private int totalCopies;
+    private int rentedCopies;
+    private int availableCopies;
+    private String rentalPrice = new String();
 
-    public Game(int gameId, String title, String platform, String size, String price) {
+    public Game(String gameId, String title, String platform, int totalCopies, int rentedCopies, String rentalPrice) {
         this.gameId = gameId;
         this.title = title;
         this.platform = platform;
-        this.size = size;
-        this.price = price;
+        this.totalCopies = totalCopies;
+        this.rentedCopies = rentedCopies;
+        availableCopies = totalCopies - rentedCopies;
+        this.rentalPrice = rentalPrice;
     }
 
-    public int getGameId() {
+    public String getGameId() {
         return this.gameId;
     }
 
-    public void setGameId(int gameId) {
+    public void setGameId(String gameId) {
         this.gameId = gameId;
     }
 
@@ -41,21 +45,44 @@ public class Game {
     public void setPlatform(String platform) {
         this.platform = platform;
     }
-
-    public String getSize() {
-        return this.size;
+    
+    public int getTotalCopies() {
+        return this.totalCopies;
+    }
+    
+    public void setTotalCopies(int copies) {
+        this.totalCopies = copies;   
+    }
+    
+    public int getRentedCopies() {
+        return this.rentedCopies;
+    }
+    
+    public void setRentedCopies(int rentedCopies) {
+        this.rentedCopies = rentedCopies;   
+    }
+    
+    public int getAvailableCopies() {
+        return this.availableCopies;
+    }
+    
+    public void setAvailableCopies(int availableCopies) {
+        this.availableCopies = availableCopies;   
+    }
+    
+    public String getRentalPrice() {
+        return this.rentalPrice;
+    }
+    
+    public void setRentalPrice(String rentalPrice) {
+        this.rentalPrice = rentalPrice;
     }
 
-    public void setSize(String size) {
-        this.size = size;
+    @Override
+    public String toString() {
+        return "Title: " + this.title + "\nPlatform: " + this.platform + "\nRental Price: " + this.rentalPrice + " RS" + "\nTotal Copies: " + this.totalCopies
+            + "\nRented Copies: " + this.rentedCopies + "\nAvailable Copies: " + this.availableCopies + "\nGame ID: " + this.gameId + "\n";
     }
-
-    public String getPrice() {
-        return this.price;
-    }
-
-    public void setPrice(String price) {
-        this.price = price;
-    }
-
+    
+    
 }

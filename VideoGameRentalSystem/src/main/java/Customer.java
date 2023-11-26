@@ -8,10 +8,11 @@ import java.util.ArrayList;
 public class Customer {
     private String cnic = new String();
     private String phoneNo = new String();
-    private int ongoingRentals;
+    private int ongoingRentals = 0;
     private String name = new String();
-    static ArrayList<Game> gamesRented = new ArrayList<>();
-    
+    static ArrayList<String> gamesRented = new ArrayList<>();
+    static int counter = -1;
+            
     public Customer(String cnic, String phoneNo, int ongoingRentals, String name) {
         this.cnic = cnic;
         this.phoneNo = phoneNo;
@@ -39,10 +40,20 @@ public class Customer {
         return this.ongoingRentals;
     }
 
-    public void setOngoingRentals(int ongoingRentals) {
-        this.ongoingRentals = ongoingRentals;
+// experimental         public void setOngoingRentals(int ongoingRentals) {
+//                          this.ongoingRentals = ongoingRentals;
+//                      }
+    
+    public void incrementOngoingRentals() {
+        this.ongoingRentals++;
+        this.counter++;
     }
-
+    
+    public void decrementOngoingRentals() {
+        this.ongoingRentals--;
+        this.counter--;
+    }
+    
     public String getName() {
         return this.name;
     }
@@ -51,12 +62,12 @@ public class Customer {
         this.name = name;
     }
     
-    
-    
-    
+    public void displayRentedGames() {
+        System.out.println(gamesRented);
+    }
     
     @Override
     public String toString() {
-        return "Name: " + this.name + "\nCNIC: " + this.cnic + "\nPhone: " + this.phoneNo + "\nOngoing Rentals: " + this.ongoingRentals + "\n";
+        return "Name: " + this.name + "\nCNIC: " + this.cnic + "\nPhone: " + this.phoneNo + "\nNo. of ongoing rentals: " + this.ongoingRentals + "\n";
     }
 }

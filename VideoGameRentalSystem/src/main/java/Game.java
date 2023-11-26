@@ -62,6 +62,16 @@ public class Game {
         this.rentedCopies = rentedCopies;   
     }
     
+    public void incrementRentedCopies() {
+        this.rentedCopies++;
+        this.availableCopies--;
+    }
+
+    public void decrementRentedCopies() {
+        this.rentedCopies--;
+        this.availableCopies++;
+    }    
+    
     public int getAvailableCopies() {
         return this.availableCopies;
     }

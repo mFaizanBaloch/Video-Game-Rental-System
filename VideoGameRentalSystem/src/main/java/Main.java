@@ -285,10 +285,11 @@ public class Main {
                                         System.out.print("Enter Phone no. (Previous no.: " + temp.getPhoneNo() + "): ");                                        
                                         phone = scan.nextLine();     
                                         temp.setPhoneNo(phone);
-                                        System.out.print("Enter no. of ongoing rentals (Previous no.: " + temp.getOngoingRentals() + "): ");
-                                        rentals = scan.nextInt();
-                                        scan.nextLine();
-                                        temp.setOngoingRentals(rentals);
+                                        
+// experimental                           System.out.print("Enter no. of ongoing rentals (Previous no.: " + temp.getOngoingRentals() + "): ");
+//                                        rentals = scan.nextInt();
+//                                        scan.nextLine();
+//                                        temp.setOngoingRentals(rentals);
                                         
                                         customerList.set(i, temp); // Setting updated data to required index through temp object
                                         
@@ -314,6 +315,9 @@ public class Main {
                                     for (int i = 0; i < customerCounter + 1; i++) {
                                         System.out.println();
                                         System.out.print(customerList.get(i));
+                                        System.out.print("Rented games: ");
+                                        Customer temp = customerList.get(i);
+                                        temp.displayRentedGames();
                                     }
                                     
                                     System.out.print("\nPress ENTER key to continue...");
@@ -340,7 +344,10 @@ public class Main {
 
                                         if (tempId.equals(cnic)) {
                                             System.out.println();
-                                            System.out.println(temp);
+                                            System.out.print(temp);
+                                            System.out.print("Rented games: ");
+                                            temp.displayRentedGames();
+                                            System.out.println();
                                             System.out.print("Press ENTER key to continue...");
 
                                             try { // Continues the program when user enters ENTER key.
@@ -541,9 +548,134 @@ public class Main {
                     break;
                     
                 case 4: // Recording transaction.
-                    System.out.println("Transactions functionality...");
-                    choice1 = 0;
-                    break;
+                    flag1 = false;
+                    flag2 = true;
+                    System.out.println("1. Rent a video game.");
+                    System.out.println("2. Return of a rented game.");
+                    System.out.print("        \nEnter the number of operation to perfom: ");
+                    scan.nextLine();
+                    int opt = scan.nextInt();
+
+                    
+                    switch (opt) {
+                        case 1: // Rent transaction.
+                            System.out.print("Enter customer CNIC: ");
+                            scan.nextLine();
+                            String cnic = scan.next();
+
+                            for (int i = 0; i < customerCounter + 1; i++) {
+                                Customer tempCustomerObj = customerList.get(i);
+                                String tempCnic = tempCustomerObj.getCnic();
+                                flag1 = false;
+                                flag2 = true;
+                                
+                                if (tempCnic.equals(cnic)) {
+                                    System.out.println("Customer Profile found!");
+                                    System.out.println("=======================");
+                                    System.out.println();
+                                    
+                                    for (int j = 0; j < gameCounter + 1; j++) { // Displaying all available games.
+                                        System.out.print(gameList.get(j));
+                                        System.out.println();
+                                    }
+
+                                    System.out.println("=======================");
+                                    System.out.print("Enter the game ID to rent game: ");
+                                    String id = scan.next();
+
+                                    for (int k = 0; k < gameCounter + 1; k++) {
+                                        Game tempGameObj = gameList.get(k);
+                                        String tempId = tempGameObj.getGameId();
+                                        flag1 = false;
+                                        flag2 = true;
+
+                                        if (tempId.equals(id)) {
+                                            String concatenatedInfo = tempGameObj.getTitle() + " (" + tempId + ")";
+                                            tempCustomerObj.incrementOngoingRentals();
+                                            tempCustomerObj.gamesRented.add(concatenatedInfo); // Adds game title and id to an Arraylist in Customer profile.
+                                            customerList.set(i, tempCustomerObj); // Placing temp customer object to required position.
+                                            
+                                            tempGameObj.incrementRentedCopies(); // Incrementing rented copies of the specific game.
+                                            gameList.set(k, tempGameObj); // Playing temp game obj to required position.
+                                            
+                                            flag1 = true;
+                                            flag2 = false;
+//                                            choice1 = 0;
+                                            break;
+                                        }
+                                    }  
+                                    break;    
+                                }   
+                            }
+                            
+//                            choice1 = 0;
+                            break;
+                            
+                                        
+                        case 2: // Return transaction.
+                            System.out.print("Enter customer CNIC: ");
+                            scan.nextLine();
+                            cnic = scan.next();
+
+                            for (int i = 0; i < customerCounter + 1; i++) {
+                                Customer tempCustomerObj = customerList.get(i);
+                                String tempCnic = tempCustomerObj.getCnic();
+                                flag1 = false;
+                                flag2 = true;
+                                
+                                if (tempCnic.equals(cnic)) {
+                                    System.out.println();
+                                    System.out.println("Available Games:");
+                                    System.out.println("=======================");
+                                    System.out.println();
+                                    
+                                    for (int j = 0; j < tempCustomerObj.counter; j++) { // Displaying all rented available games by customer.
+                                        System.out.println("Customer's ongoing rental games:");
+                                        tempCustomerObj.displayRentedGames();
+                                        System.out.println();
+                                    }
+
+                                    System.out.println("=======================");
+                                    System.out.print("Enter the game ID to return it: ");
+                                    String id = scan.next();
+
+                                    for (int k = 0; k < gameCounter + 1; k++) {
+                                        Game tempGameObj = gameList.get(k);
+                                        String tempId = tempGameObj.getGameId();
+                                        String tempTitle = tempGameObj.getTitle();
+                                        String tempConcat = tempTitle + " (" + tempId + ")";
+                                        flag1 = false;
+                                        flag2 = true;
+
+                                        if (tempId.equals(id)) {
+                                            tempCustomerObj.gamesRented.remove(tempConcat); // Removes the game from customer's rentals.
+                                            tempCustomerObj.decrementOngoingRentals(); // Decrement of ongoing rentals counter.
+                                            customerList.set(i, tempCustomerObj); // Placing temp customer object at required index of customer list.
+                                            
+                                            tempGameObj.decrementRentedCopies();
+                                            gameList.set(k, tempGameObj);
+
+                                            flag1 = true;
+                                            flag2 = false;
+//                                            choice1 = 0;
+                                            break;
+                                        }
+                                    }
+                                    break;    
+                                }   
+                            }
+                            
+//                            choice1 = 0;
+                            break;
+        
+                        default:
+                            flag1 = false;
+                            flag2 = true;
+                            break;
+                    }
+                    
+                    break;        
+                    
                     
                 case 5: // Exiting the program.
                     System.out.println("Exiting program...");
@@ -577,11 +709,11 @@ public class Main {
         System.out.println("                Main Menu:");
         System.out.println("-----------------------------------------");
         System.out.println("Enter the number to display required menu:");
-        System.out.println("1. Video Game menu (non-functional)");
-        System.out.println("2. Customer menu (non-functional)");
-        System.out.println("3. Staff menu (functional)");
-        System.out.println("4. Record a transaction (non-functional)");
-        System.out.println("5. Exit the program (functional)");
+        System.out.println("1. Video Game menu");
+        System.out.println("2. Customer menu");
+        System.out.println("3. Staff menu");
+        System.out.println("4. Record a transaction");
+        System.out.println("5. Exit the program");
         System.out.println("-----------------------------------------");
         System.out.print("Choice: ");
     }

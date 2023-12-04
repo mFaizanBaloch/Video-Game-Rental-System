@@ -22,6 +22,9 @@ public class Main {
    
         int choice1 = 0;
         
+        GUImain gui = new GUImain();
+        
+        
         do {
             
             MainMenu();
@@ -56,9 +59,7 @@ public class Main {
                                 String rentalPrice = scan.nextLine();
                                 System.out.println("Note: RENTAL PRICE IS IN PKR, AND RENTAL IS FOR ONE WEEK.");
                                 
-                                gameCounter++; // Incrementing the game ArrayList index counter
-                                Game tempGameObj = new Game(id, title, platform, totalCopies, rentedCopies, rentalPrice); // Temporary object of game
-                                gameList.add(gameCounter, tempGameObj); // Appending temp to ArrayList of objects of game
+                                addVideoGame(id, title, platform, totalCopies, rentedCopies, rentalPrice);
                                 
                                 flag1 = true;
                                 choice2 = 0;
@@ -789,4 +790,43 @@ public class Main {
         System.out.println("-----------------------------------------");
         System.out.print("Choice: ");
     }  
+
+    public static void addVideoGame(String id, String title, String platform, int totalCopies, int rentedCopies, String rentalPrice) {
+        gameCounter++; // Incrementing the game ArrayList index counter
+        Game tempGameObj = new Game(id, title, platform, totalCopies, rentedCopies, rentalPrice); // Temporary object of game
+        gameList.add(gameCounter, tempGameObj); // Appending temp to ArrayList of objects of game
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
+

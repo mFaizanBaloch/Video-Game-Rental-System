@@ -19,10 +19,9 @@ public class Main {
     static int customerCounter = -1;
     
     public static void main(String args[]) {
-   
-        int choice1 = 0;
-        
         GUImain gui = new GUImain();
+
+        int choice1 = 0;
         
         
         do {

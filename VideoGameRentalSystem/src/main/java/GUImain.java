@@ -68,6 +68,12 @@ public class GUImain extends JFrame{
     JTextField txtfldGamePrice = new JTextField();
     
     
+    // Buttons:
+        //.....for game menu's add game panel:
+    JButton btnSubmitAddGame = new JButton("Submit");
+    
+    
+    
     
     // Fonts and Colors:
     Font fontSubtext = new Font("Calibri", 0, 18);
@@ -118,30 +124,26 @@ public class GUImain extends JFrame{
         lblAddGameMenu.setFont(fontSubtext);
         lblAddGameMenu.setBounds(180,22,300,50);
         lblAddGameMenu.setForeground(colorWhite);
-        lblGameId.setBounds(80, 100, 150, 50);
+        lblGameId.setBounds(80, 90, 150, 50);
         lblGameId.setForeground(colorWhite);
-        lblGameTitle.setBounds(80, 140, 150, 50);
+        lblGameTitle.setBounds(80, 130, 150, 50);
         lblGameTitle.setForeground(colorWhite);
-        lblGamePlatform.setBounds(80, 180, 150, 50);
+        lblGamePlatform.setBounds(80, 170, 150, 50);
         lblGamePlatform.setForeground(colorWhite);
-        lblGameTotalCopies.setBounds(80, 220, 150, 50);
+        lblGameTotalCopies.setBounds(80, 210, 150, 50);
         lblGameTotalCopies.setForeground(colorWhite);
-        lblGameRentedCopies.setBounds(80, 260, 150, 50);
+        lblGameRentedCopies.setBounds(80, 250, 150, 50);
         lblGameRentedCopies.setForeground(colorWhite);
-        lblGamePrice.setBounds(80, 300, 150, 50);
+        lblGamePrice.setBounds(80, 290, 150, 50);
         lblGamePrice.setForeground(colorWhite);
-        txtfldGameId.setBounds(225, 115, 180, 25);
-        txtfldGameId.setForeground(colorWhite);
-        txtfldGameTitle.setBounds(225, 155, 180, 25);
-        txtfldGameTitle.setForeground(colorWhite);
-        txtfldGamePlatform.setBounds(225, 195, 180, 25);
-        txtfldGamePlatform.setForeground(colorWhite);
-        txtfldGameTotalCopies.setBounds(225, 235, 180, 25);
-        txtfldGameTotalCopies.setForeground(colorWhite);
-        txtfldGameRentedCopies.setBounds(225, 275, 180, 25);
-        txtfldGameRentedCopies.setForeground(colorWhite);
-        txtfldGamePrice.setBounds(225, 315, 180, 25);
-        txtfldGamePrice.setForeground(colorWhite);
+        txtfldGameId.setBounds(225, 105, 180, 25);
+        txtfldGameTitle.setBounds(225, 145, 180, 25);
+        txtfldGamePlatform.setBounds(225, 185, 180, 25);
+        txtfldGameTotalCopies.setBounds(225, 225, 180, 25);
+        txtfldGameRentedCopies.setBounds(225, 265, 180, 25);
+        txtfldGamePrice.setBounds(225, 305, 180, 25);
+        btnSubmitAddGame.setBounds(210, 360, 80, 25);
+        
         
         
         lblUpdateGameMenu.setFont(fontSubtext);
@@ -155,6 +157,11 @@ public class GUImain extends JFrame{
         lblSearchGameMenu.setFont(fontSubtext);
         lblSearchGameMenu.setBounds(120,22,300,50);
         lblSearchGameMenu.setForeground(colorWhite);
+        
+        
+        
+        
+        
         
         
         // Panel settings:
@@ -186,6 +193,7 @@ public class GUImain extends JFrame{
         panelAddGame.add(txtfldGameTotalCopies);
         panelAddGame.add(txtfldGameRentedCopies);
         panelAddGame.add(txtfldGamePrice);
+        panelAddGame.add(btnSubmitAddGame);
         
         panelUpdateGame.setLayout(null);
         panelUpdateGame.setVisible(false);
@@ -219,20 +227,31 @@ public class GUImain extends JFrame{
         
         
         
-        
-        
+        // Action Listeners for menu calls:
+            //.....for main menu's stats menu panel call:        
+        itemStats.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Calling main menu's stats panel:
+                getContentPane().removeAll();
+                panelStats.setVisible(true);
+                add(panelStats);
+                panelStats.revalidate();
+                panelStats.repaint();
+            }
+        });
+            //.....for game menu's sub-menu (add game) panel call:
         itemAddGame.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Calling add game panel:
                 getContentPane().removeAll();
                 panelAddGame.setVisible(true);
                 add(panelAddGame);
                 panelAddGame.revalidate();
                 panelAddGame.repaint();
             }
-        });
-        
+        });        
+            //.....for game menu's sub-menu (update game) panel call:
         itemUpdateGame.addActionListener(new ActionListener () {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -244,7 +263,7 @@ public class GUImain extends JFrame{
                 panelUpdateGame.repaint(); 
             }
         });
-        
+            //.....for game menu's sub-menu (remove game) panel call:
         itemRemoveGame.addActionListener(new ActionListener () {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -256,7 +275,7 @@ public class GUImain extends JFrame{
                 panelRemoveGame.repaint(); 
             }
         });
-        
+            //.....for game menu's sub-menu (search game) panel call:
         itemSearchGame.addActionListener(new ActionListener () {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -270,11 +289,14 @@ public class GUImain extends JFrame{
         });
         
         
-        
-        itemStats.addActionListener(new ActionListener() {
+        // Action Listeners for buttons:
+            //.....for game menu's add game menu:
+        btnSubmitAddGame.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Calling main menu's stats panel:
+            // Submits game data to add it in ArrayList, then returns to main menu stats panel.
+            
+                // Functionality to add data to Arraylist
                 getContentPane().removeAll();
                 panelStats.setVisible(true);
                 add(panelStats);

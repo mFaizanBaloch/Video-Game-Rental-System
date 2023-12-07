@@ -4,9 +4,9 @@
 //Project Title: Video Game Rental System
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
@@ -19,11 +19,12 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneLayout;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
-import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableModel;
 
 public class GUImain extends JFrame{
     // FLAGS:
@@ -73,7 +74,8 @@ public class GUImain extends JFrame{
     JLabel lblValidateGame = new JLabel();
     
     
-    
+    // TEXT AREA:
+    JTextArea txtareaDisplay = new JTextArea();
     
     
     // TEXT FIELDS:
@@ -93,12 +95,10 @@ public class GUImain extends JFrame{
     JButton btnSubmitUpdateGame = new JButton("Submit");
     JButton btnSubmitRemoveGame = new JButton("Submit");
     
-    
-    // TABLE:
-    JTable tblGames;
-    
     // SCROLL PANE:
-    JScrollPane scrlTables = new JScrollPane();
+    JScrollPane scroll;
+    // TABLE:
+    JTable tableTest;
     
     // FONTS AND COLORS:
     Font fontSubtext = new Font("Calibri", 0, 18);
@@ -181,7 +181,7 @@ public class GUImain extends JFrame{
                 panelDisplayGame.setVisible(true);
                 add(panelDisplayGame);
                 panelDisplayGame.revalidate();
-                panelDisplayGame.repaint(); 
+                panelDisplayGame.repaint();  
             }
         });
         
@@ -390,13 +390,14 @@ public class GUImain extends JFrame{
     }
     public void panelSettingsDisplayGame() {
         compSettingsDisplayGamePanel();
+        getContentPane().removeAll();
         panelDisplayGame.setLayout(null);
         panelDisplayGame.setVisible(false);
         panelDisplayGame.setSize(500,480);
         panelDisplayGame.setBackground(colorVeryBlue);
         panelDisplayGame.add(lblDisplayGameMenu);
-        panelDisplayGame.add(tblGames);
-        panelDisplayGame.add(scrlTables);
+//        panelDisplayGame.add(txtareaDisplay);
+        panelDisplayGame.add(tableTest);
     }
     
     
@@ -408,10 +409,13 @@ public class GUImain extends JFrame{
      public void compSettingsStatsPanel() {
         lblTotalGame.setBounds(100,195,300,40);
         lblTotalGame.setForeground(colorWhite);
+        lblTotalGame.setFont(new Font("Calibri", 0, 18));
         lblTotalStaff.setBounds(100,245,300,40);
         lblTotalStaff.setForeground(colorWhite);
+        lblTotalStaff.setFont(new Font("Calibri", 0, 18));
         lblTotalCustomer.setBounds(100,295,300,40);
         lblTotalCustomer.setForeground(colorWhite);
+        lblTotalCustomer.setFont(new Font("Calibri", 0, 18));
         lblCompanyName.setFont(new Font("Calibri", 0, 42));
         lblCompanyName.setBounds(165,55,300,50);
         lblCompanyName.setForeground(colorWhite);
@@ -423,24 +427,24 @@ public class GUImain extends JFrame{
         lblAddGameMenu.setFont(fontSubtext);
         lblAddGameMenu.setBounds(165,22,300,50);
         lblAddGameMenu.setForeground(colorWhite);
-        lblGameTitle.setBounds(80, 90, 150, 50);
+        lblGameTitle.setBounds(80, 85, 150, 50);
         lblGameTitle.setForeground(colorWhite);
-        lblGamePlatform.setBounds(80, 130, 150, 50);
+        lblGamePlatform.setBounds(80, 125, 150, 50);
         lblGamePlatform.setForeground(colorWhite);
-        lblGameId.setBounds(80, 170, 150, 50);
+        lblGameId.setBounds(80, 165, 150, 50);
         lblGameId.setForeground(colorWhite);
-        lblGameTotalCopies.setBounds(80, 210, 150, 50);
+        lblGameTotalCopies.setBounds(80, 205, 150, 50);
         lblGameTotalCopies.setForeground(colorWhite);
-        lblGameRentedCopies.setBounds(80, 250, 150, 50);
+        lblGameRentedCopies.setBounds(80, 245, 150, 50);
         lblGameRentedCopies.setForeground(colorWhite);
-        lblGamePrice.setBounds(80, 290, 150, 50);
+        lblGamePrice.setBounds(80, 285, 150, 50);
         lblGamePrice.setForeground(colorWhite);
-        txtfldGameTitle.setBounds(225, 105, 180, 25);
-        txtfldGamePlatform.setBounds(225, 145, 180, 25);
-        txtfldGameId.setBounds(225, 185, 180, 25);
-        txtfldGameTotalCopies.setBounds(225, 225, 180, 25);
-        txtfldGameRentedCopies.setBounds(225, 265, 180, 25);
-        txtfldGamePrice.setBounds(225, 305, 180, 25);
+        txtfldGameTitle.setBounds(225, 100, 180, 25);
+        txtfldGamePlatform.setBounds(225, 140, 180, 25);
+        txtfldGameId.setBounds(225, 180, 180, 25);
+        txtfldGameTotalCopies.setBounds(225, 220, 180, 25);
+        txtfldGameRentedCopies.setBounds(225, 260, 180, 25);
+        txtfldGamePrice.setBounds(225, 300, 180, 25);
         btnSubmitAddGame.setBounds(202, 360, 80, 25);
     }
     public void compSettingsUpdateGamePanel() {
@@ -481,65 +485,47 @@ public class GUImain extends JFrame{
     public void compSettingsDisplayGamePanel() {
         lblDisplayGameMenu.setFont(fontSubtext);
         lblDisplayGameMenu.setBounds(145,22,300,50);
-        lblDisplayGameMenu.setForeground(colorWhite);
-        
-        String[] head = {"Title", "Platform", "ID", "Price", "Total", "Rented", "Available"};
-        String[][] data = {
-            { "Kundan Kumar Jha", "4031", "CSE", "", "", "", "" },
-            { "Anand Jha", "6014", "IT", "", "", "", ""},
-            { "Kundan Kumar Jha", "4031", "CSE", "", "", "", "" },
-            { "Kundan Kumar Jha", "4031", "CSE", "", "", "", "" },
-            { "Kundan Kumar Jha", "4031", "CSE", "", "", "", "" },
-            { "Kundan Kumar Jha", "4031", "CSE", "", "", "", "" },
-            { "Kundan Kumar Jha", "4031", "CSE", "", "", "", "" },
-            { "Kundan Kumar Jha", "4031", "CSE", "", "", "", "" },
-            { "Kundan Kumar Jha", "4031", "CSE", "", "", "", "" },
-            { "Kundan Kumar Jha", "4031", "CSE", "", "", "", "" },
-            { "Kundan Kumar Jha", "4031", "CSE", "", "", "", "" },
-            { "Kundan Kumar Jha", "4031", "CSE", "", "", "", "" },
-            { "Kundan Kumar Jha", "4031", "CSE", "", "", "", "" },
-            { "Kundan Kumar Jha", "4031", "CSE", "", "", "", "" },
-            { "Kundan Kumar Jha", "4031", "CSE", "", "", "", "" },
-            { "Kundan Kumar Jha", "4031", "CSE", "", "", "", "" },
-            { "Kundan Kumar Jha", "4031", "CSE", "", "", "", "" },
-            { "Kundan Kumar Jha", "4031", "CSE", "", "", "", "" },
-            { "Kundan Kumar Jha", "4031", "CSE", "", "", "", "" },
-            { "Kundan Kumar Jha", "4031", "CSE", "", "", "", "" },
-            { "Kundan Kumar Jha", "4031", "CSE", "", "", "", "" },
-            { "Kundan Kumar Jha", "4031", "CSE", "", "", "", "" },
-            { "Kundan Kumar Jha", "4031", "CSE", "", "", "", "" },
-            { "Kundan Kumar Jha", "4031", "CSE", "", "", "", "" },
-            { "Kundan Kumar Jha", "4031", "CSE", "", "", "", "" },
-            { "Kundan Kumar Jha", "4031", "CSE", "", "", "", "" },
-            { "Kundan Kumar Jha", "4031", "CSE", "", "", "", "" },
-            { "Kundan Kumar Jha", "4031", "CSE", "", "", "", "" },
-            { "Kundan Kumar Jha", "4031", "CSE", "", "", "", "" },
-            { "Kundan Kumar Jha", "4031", "CSE", "", "", "", "" },
-            { "Kundan Kumar Jha", "4031", "CSE", "", "", "", "" },
-            { "Kundan Kumar Jha", "4031", "CSE", "", "", "", "" },
-            { "Kundan Kumar Jha", "4031", "CSE", "", "", "", "" },
-            { "Kundan Kumar Jha", "4031", "CSE", "", "", "", "" },
-            { "Kundan Kumar Jha", "4031", "CSE", "", "", "", "" },
-            { "Kundan Kumar Jha", "4031", "CSE", "", "", "", "" },
-            
-        };
-        
-        tblGames = new JTable(data, head);
-        tblGames.setBounds(10,60,400,200);
-        JTableHeader header = tblGames.getTableHeader();
-        header.setForeground(colorWhite);
-        header.setBackground(Color.BLACK);
-        
-        scrlTables = new JScrollPane(tblGames);
-//        scrlTables.setBounds(400,50,100,100);
-        scrlTables.setLayout(new ScrollPaneLayout());
-        tblGames.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        lblDisplayGameMenu.setForeground(colorWhite);        
+//        txtareaDisplay.setBounds(15, 75, 455, 320);
+//        txtareaDisplay.setLineWrap(true);
+//        txtareaDisplay.setEditable(false);
+//        for (int i = 0; i < Main.gameCounter + 1; i++) {
+//            txtareaDisplay.append(Main.gameList.get(i).toString(0));
+//        }
 
+
+        tableTest = new JTable(25, 7);        
+        
+//        tableTest = new JTable();
+        tableTest.setBounds(15,75,455,320);
+        tableTest.getColumnModel().getColumn(0).setPreferredWidth(200);
+        tableTest.getColumnModel().getColumn(1).setPreferredWidth(45);
+        tableTest.getColumnModel().getColumn(2).setPreferredWidth(45);
+//        tableTest.getColumnModel().getColumn(3).setPreferredWidth(85);
+        tableTest.getColumnModel().getColumn(4).setPreferredWidth(40);
+        tableTest.getColumnModel().getColumn(5).setPreferredWidth(40);
+        tableTest.getColumnModel().getColumn(6).setPreferredWidth(40);
+        
+        tableTest.setValueAt("TITLE", 0, 0);
+        tableTest.setValueAt("PLT", 0, 1);
+        tableTest.setValueAt("RS", 0, 2);
+        tableTest.setValueAt("GAME ID", 0, 3);
+        tableTest.setValueAt("TC", 0, 4);
+        tableTest.setValueAt("RC", 0, 5);
+        tableTest.setValueAt("AC", 0, 6);
+        
+        for (int i = 0; i < Main.gameCounter + 1; i++) {
+            tableTest.setValueAt(Main.gameList.get(i).getTitle(), i+1, 0);
+            tableTest.setValueAt(Main.gameList.get(i).getPlatform(), i+1, 1);
+            tableTest.setValueAt(Main.gameList.get(i).getRentalPrice(), i+1, 2);
+            tableTest.setValueAt(Main.gameList.get(i).getGameId(), i+1, 3);
+            tableTest.setValueAt(Main.gameList.get(i).getTotalCopies(), i+1, 4);
+            tableTest.setValueAt(Main.gameList.get(i).getRentedCopies(), i+1, 5);
+            tableTest.setValueAt(Main.gameList.get(i).getAvailableCopies(), i+1, 6);
+        }
+        
+                
     }
-    
-    
-    
-    
     
     
     

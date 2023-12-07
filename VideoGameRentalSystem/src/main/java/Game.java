@@ -94,5 +94,10 @@ public class Game {
             + "\nRented Copies: " + this.rentedCopies + "\nAvailable Copies: " + this.availableCopies + "\nGame ID: " + this.gameId + "\n";
     }
     
+    public String toString(int x) {
+        // int x has no use, it is only to overload toString() function.
+        return this.title + ", " + this.platform + ", " + this.rentalPrice + " RS, " + this.gameId + ", " + this.totalCopies
+            + ", " + this.rentedCopies + ", " + this.availableCopies + "\n";
+    }
     
 }

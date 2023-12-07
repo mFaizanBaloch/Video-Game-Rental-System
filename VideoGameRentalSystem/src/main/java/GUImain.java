@@ -4,7 +4,9 @@
 //Project Title: Video Game Rental System
 
 import java.awt.Color;
+import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
@@ -15,7 +17,13 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.ScrollPaneLayout;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableColumnModel;
 
 public class GUImain extends JFrame{
     // FLAGS:
@@ -39,7 +47,7 @@ public class GUImain extends JFrame{
     JMenuItem itemAddGame = new JMenuItem("Add Game");
     JMenuItem itemUpdateGame = new JMenuItem("Update Game");
     JMenuItem itemRemoveGame = new JMenuItem("Remove Game");
-    JMenuItem itemDisplayGame = new JMenuItem("Search Game");
+    JMenuItem itemDisplayGame = new JMenuItem("Display Game");
     JMenuItem itemStats = new JMenuItem("Stats");
     
     // LABELS:
@@ -86,6 +94,12 @@ public class GUImain extends JFrame{
     JButton btnSubmitRemoveGame = new JButton("Submit");
     
     
+    // TABLE:
+    JTable tblGames;
+    
+    // SCROLL PANE:
+    JScrollPane scrlTables = new JScrollPane();
+    
     // FONTS AND COLORS:
     Font fontSubtext = new Font("Calibri", 0, 18);
     Color colorVeryBlue = new Color(24, 29, 49);
@@ -104,6 +118,7 @@ public class GUImain extends JFrame{
         super.setLayout(null);
         super.setLocationRelativeTo(null);
         super.add(panelStats);
+//        super.add(scrlTables);
         super.setJMenuBar(menuBar);
         super.setVisible(true);
         
@@ -161,7 +176,7 @@ public class GUImain extends JFrame{
         itemDisplayGame.addActionListener(new ActionListener () {
             @Override
             public void actionPerformed(ActionEvent e) {
-                panelSettingsSearchGame();
+                panelSettingsDisplayGame();
                 getContentPane().removeAll();
                 panelDisplayGame.setVisible(true);
                 add(panelDisplayGame);
@@ -373,13 +388,15 @@ public class GUImain extends JFrame{
         panelRemoveGame.add(txtfldValidateGame);
         panelRemoveGame.add(btnSubmitRemoveGame);
     }
-    public void panelSettingsSearchGame() {
-        compSettingsSearchGamePanel();
+    public void panelSettingsDisplayGame() {
+        compSettingsDisplayGamePanel();
         panelDisplayGame.setLayout(null);
         panelDisplayGame.setVisible(false);
         panelDisplayGame.setSize(500,480);
         panelDisplayGame.setBackground(colorVeryBlue);
         panelDisplayGame.add(lblDisplayGameMenu);
+        panelDisplayGame.add(tblGames);
+        panelDisplayGame.add(scrlTables);
     }
     
     
@@ -461,12 +478,63 @@ public class GUImain extends JFrame{
         txtfldValidateGame.setBounds(155, 190, 180, 25);
         btnSubmitRemoveGame.setBounds(202, 320, 80, 25);
     }
-    public void compSettingsSearchGamePanel() {
+    public void compSettingsDisplayGamePanel() {
         lblDisplayGameMenu.setFont(fontSubtext);
         lblDisplayGameMenu.setBounds(145,22,300,50);
         lblDisplayGameMenu.setForeground(colorWhite);
         
+        String[] head = {"Title", "Platform", "ID", "Price", "Total", "Rented", "Available"};
+        String[][] data = {
+            { "Kundan Kumar Jha", "4031", "CSE", "", "", "", "" },
+            { "Anand Jha", "6014", "IT", "", "", "", ""},
+            { "Kundan Kumar Jha", "4031", "CSE", "", "", "", "" },
+            { "Kundan Kumar Jha", "4031", "CSE", "", "", "", "" },
+            { "Kundan Kumar Jha", "4031", "CSE", "", "", "", "" },
+            { "Kundan Kumar Jha", "4031", "CSE", "", "", "", "" },
+            { "Kundan Kumar Jha", "4031", "CSE", "", "", "", "" },
+            { "Kundan Kumar Jha", "4031", "CSE", "", "", "", "" },
+            { "Kundan Kumar Jha", "4031", "CSE", "", "", "", "" },
+            { "Kundan Kumar Jha", "4031", "CSE", "", "", "", "" },
+            { "Kundan Kumar Jha", "4031", "CSE", "", "", "", "" },
+            { "Kundan Kumar Jha", "4031", "CSE", "", "", "", "" },
+            { "Kundan Kumar Jha", "4031", "CSE", "", "", "", "" },
+            { "Kundan Kumar Jha", "4031", "CSE", "", "", "", "" },
+            { "Kundan Kumar Jha", "4031", "CSE", "", "", "", "" },
+            { "Kundan Kumar Jha", "4031", "CSE", "", "", "", "" },
+            { "Kundan Kumar Jha", "4031", "CSE", "", "", "", "" },
+            { "Kundan Kumar Jha", "4031", "CSE", "", "", "", "" },
+            { "Kundan Kumar Jha", "4031", "CSE", "", "", "", "" },
+            { "Kundan Kumar Jha", "4031", "CSE", "", "", "", "" },
+            { "Kundan Kumar Jha", "4031", "CSE", "", "", "", "" },
+            { "Kundan Kumar Jha", "4031", "CSE", "", "", "", "" },
+            { "Kundan Kumar Jha", "4031", "CSE", "", "", "", "" },
+            { "Kundan Kumar Jha", "4031", "CSE", "", "", "", "" },
+            { "Kundan Kumar Jha", "4031", "CSE", "", "", "", "" },
+            { "Kundan Kumar Jha", "4031", "CSE", "", "", "", "" },
+            { "Kundan Kumar Jha", "4031", "CSE", "", "", "", "" },
+            { "Kundan Kumar Jha", "4031", "CSE", "", "", "", "" },
+            { "Kundan Kumar Jha", "4031", "CSE", "", "", "", "" },
+            { "Kundan Kumar Jha", "4031", "CSE", "", "", "", "" },
+            { "Kundan Kumar Jha", "4031", "CSE", "", "", "", "" },
+            { "Kundan Kumar Jha", "4031", "CSE", "", "", "", "" },
+            { "Kundan Kumar Jha", "4031", "CSE", "", "", "", "" },
+            { "Kundan Kumar Jha", "4031", "CSE", "", "", "", "" },
+            { "Kundan Kumar Jha", "4031", "CSE", "", "", "", "" },
+            { "Kundan Kumar Jha", "4031", "CSE", "", "", "", "" },
+            
+        };
         
+        tblGames = new JTable(data, head);
+        tblGames.setBounds(10,60,400,200);
+        JTableHeader header = tblGames.getTableHeader();
+        header.setForeground(colorWhite);
+        header.setBackground(Color.BLACK);
+        
+        scrlTables = new JScrollPane(tblGames);
+//        scrlTables.setBounds(400,50,100,100);
+        scrlTables.setLayout(new ScrollPaneLayout());
+        tblGames.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+
     }
     
     

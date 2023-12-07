@@ -13,19 +13,23 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 public class GUImain extends JFrame{
-    // Panels:
+    // FLAGS:
+    static boolean flagValidation=  false;
+
+
+    // PANELS:
     JPanel panelStats = new JPanel();
     JPanel panelAddGame = new JPanel();
     JPanel panelUpdateGame = new JPanel();
     JPanel panelRemoveGame = new JPanel();
-    JPanel panelSearchGame = new JPanel();
+    JPanel panelDisplayGame = new JPanel();
     
-    
-    // Menu and related:
+    // MENU:
     JMenuBar menuBar = new JMenuBar();
     JMenu menuMain = new JMenu("Main");
     JMenu menuGame = new JMenu("Game");
@@ -35,68 +39,263 @@ public class GUImain extends JFrame{
     JMenuItem itemAddGame = new JMenuItem("Add Game");
     JMenuItem itemUpdateGame = new JMenuItem("Update Game");
     JMenuItem itemRemoveGame = new JMenuItem("Remove Game");
-    JMenuItem itemSearchGame = new JMenuItem("Search Game");
+    JMenuItem itemDisplayGame = new JMenuItem("Search Game");
     JMenuItem itemStats = new JMenuItem("Stats");
     
-    // Labels:
-        //.....for main menu, stats:
+    // LABELS:
+    //////for main menu (stats):
     JLabel lblTotalGame = new JLabel("Total Video Games: " + (Main.gameCounter + 1));
     JLabel lblTotalStaff = new JLabel("Total Staff Members: " + (Main.staffCounter + 1));
     JLabel lblTotalCustomer = new JLabel("Total Registered Customers: " + (Main.customerCounter + 1));
     JLabel lblCompanyName = new JLabel("GameFlix");
     JLabel lblProjectName = new JLabel("Video Game Rental System");
-        //.....for game menu's sub-menus:
-    JLabel lblAddGameMenu = new JLabel("Add a Video Game");
-    JLabel lblUpdateGameMenu = new JLabel("Update a Video Game");
+    //////for game menu (submenus):
+    JLabel lblAddGameMenu = new JLabel("Add a new Video Game");
+    JLabel lblUpdateGameMenu = new JLabel("Update a Video Game's data");
     JLabel lblRemoveGameMenu = new JLabel("Remove a Video Game");
-    JLabel lblSearchGameMenu = new JLabel("Search and Display a Video Game");
-        //.....for game menu's add game panel:
+    JLabel lblDisplayGameMenu = new JLabel("Displaying all Video Games");
+    //////for game menu (add game, update game):
     JLabel lblGameId = new JLabel("Enter Game ID:");
     JLabel lblGameTitle = new JLabel("Enter Title:");
     JLabel lblGamePlatform = new JLabel("Enter Platform:");
     JLabel lblGameTotalCopies = new JLabel("Enter Total Copies:");
     JLabel lblGameRentedCopies = new JLabel("Enter Rented Copies:");
     JLabel lblGamePrice = new JLabel("Enter Price:");
+    //////for game menu (update game, remove game):
+    JLabel lblValidateGame = new JLabel();
     
-    // Text Fields:
-        //.....for game menu's add game panel:
+    
+    
+    
+    
+    // TEXT FIELDS:
+    //////for game menu's add game panel:
     JTextField txtfldGameId = new JTextField();
     JTextField txtfldGameTitle = new JTextField();
     JTextField txtfldGamePlatform = new JTextField();
     JTextField txtfldGameTotalCopies = new JTextField();
     JTextField txtfldGameRentedCopies = new JTextField();
     JTextField txtfldGamePrice = new JTextField();
+    JTextField txtfldValidateGame = new JTextField();
     
     
-    // Buttons:
-        //.....for game menu's add game panel:
+    // BUTTONS:
+    //////for game menu's add game panel:
     JButton btnSubmitAddGame = new JButton("Submit");
+    JButton btnSubmitUpdateGame = new JButton("Submit");
+    JButton btnSubmitRemoveGame = new JButton("Submit");
     
     
-    
-    
-    // Fonts and Colors:
+    // FONTS AND COLORS:
     Font fontSubtext = new Font("Calibri", 0, 18);
     Color colorVeryBlue = new Color(24, 29, 49);
     Color colorWhite = new Color(255,255,255);
     
     
     public GUImain(){
-        // JFrame settings:
+        settingsMenuBar(); // Settings for Menu Bar.
+        panelSettingsStats(); // Settings for components and panel of Stats.
+
+        // JFRAME SETTINGS:
         super.setTitle("Video Game Rental");
         super.setDefaultCloseOperation(3);
         super.setSize(500, 480);
         super.setResizable(false);
         super.setLayout(null);
+        super.setLocationRelativeTo(null);
+        super.add(panelStats);
+        super.setJMenuBar(menuBar);
+        super.setVisible(true);
         
         
-        // MenuBar settings:
+        // ACTION LISTENERS FOR PANELS:
+        //////for main menu's stats menu panel call:        
+        itemStats.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                panelSettingsStats();
+                getContentPane().removeAll();
+                panelStats.setVisible(true);
+                add(panelStats);
+                panelStats.revalidate();
+                panelStats.repaint();
+            }
+        });
+        //////for game menu's sub-menu (add game) panel call:
+        itemAddGame.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                panelSettingsAddGame();
+                getContentPane().removeAll();
+                panelAddGame.setVisible(true);
+                add(panelAddGame);
+                panelAddGame.revalidate();
+                panelAddGame.repaint();
+            }
+        });        
+        //////for game menu's sub-menu (update game) panel call:
+        itemUpdateGame.addActionListener(new ActionListener () {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                panelSettingsUpdateGame();
+                getContentPane().removeAll();
+                panelUpdateGame.setVisible(true);
+                add(panelUpdateGame);
+                panelUpdateGame.revalidate();
+                panelUpdateGame.repaint(); 
+            }
+        });
+        ////// for game menu's sub-menu (remove game) panel call:
+        itemRemoveGame.addActionListener(new ActionListener () {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                panelSettingsRemoveGame();
+                getContentPane().removeAll();
+                panelRemoveGame.setVisible(true);
+                add(panelRemoveGame);
+                panelRemoveGame.revalidate();
+                panelRemoveGame.repaint(); 
+            }
+        });
+        //////for game menu's sub-menu (search game) panel call:
+        itemDisplayGame.addActionListener(new ActionListener () {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                panelSettingsSearchGame();
+                getContentPane().removeAll();
+                panelDisplayGame.setVisible(true);
+                add(panelDisplayGame);
+                panelDisplayGame.revalidate();
+                panelDisplayGame.repaint(); 
+            }
+        });
+        
+        
+        
+        // ACTION LISTENERS FOR BUTTONS:
+        //////for game menu's add game menu:
+        btnSubmitAddGame.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Setting text fields' data to variables:
+                String gameId = txtfldGameId.getText();
+                String gameTitle = txtfldGameTitle.getText();
+                String gamePlatform = txtfldGamePlatform.getText();
+                String ttlCps = txtfldGameTotalCopies.getText();
+                int totalCopies = Integer.parseInt(ttlCps);
+                String rntCps = txtfldGameRentedCopies.getText();
+                int rentedCopies = Integer.parseInt(rntCps);
+                String gamePrice = txtfldGamePrice.getText();
+                // Calling Main class to call add video game function:
+                Main.addVideoGame(gameId, gameTitle, gamePlatform, totalCopies, rentedCopies, gamePrice);
+                System.out.println(Main.gameList + "\n");
+                // Resetting text fields and stats submenu labels:
+                txtfldGameId.setText("");
+                txtfldGameTitle.setText("");
+                txtfldGamePlatform.setText("");
+                txtfldGameTotalCopies.setText("");
+                txtfldGameRentedCopies.setText("");
+                txtfldGamePrice.setText("");
+                lblTotalGame.setText("Total Video Games: " + (Main.gameCounter + 1));
+                // Success notification:
+                JOptionPane.showMessageDialog(rootPane, "Game added successfully!"); 
+                // Calling main menu's stats submenu panel:
+                getContentPane().removeAll();
+                panelStats.setVisible(true);
+                add(panelStats);
+                panelStats.revalidate();
+                panelStats.repaint();
+            }
+        });
+        //////for game menu's update game menu:
+        btnSubmitUpdateGame.addActionListener(new ActionListener() {
+        @Override
+            public void actionPerformed(ActionEvent e) {
+                // Getting data fields to store in variables:
+                String gameId = txtfldValidateGame.getText();
+                String gameTitle = txtfldGameTitle.getText();
+                String gamePlatform = txtfldGamePlatform.getText();
+                String ttlCps = txtfldGameTotalCopies.getText();
+                int totalCopies = Integer.parseInt(ttlCps);
+                String rntCps = txtfldGameRentedCopies.getText();
+                int rentedCopies = Integer.parseInt(rntCps);
+                String gamePrice = txtfldGamePrice.getText(); 
+                // Sending variables to Main class and calling function to update game data:
+                Main.updateVideoGame(gameId, gameTitle, gamePlatform, totalCopies, rentedCopies, gamePrice);
+                // Resetting text fields:
+                txtfldValidateGame.setText("");
+                txtfldGameTitle.setText("");
+                txtfldGamePlatform.setText("");
+                txtfldGameTotalCopies.setText("");
+                txtfldGameRentedCopies.setText("");
+                txtfldGamePrice.setText("");
+                // Validation for message dialog box:
+                if (flagValidation) { // When game data is updated successfully.
+                    System.out.println(Main.gameList + "\n");
+                    JOptionPane.showMessageDialog(rootPane, "Updated successfully!");    
+                    // Calling main menu's submenu stats panel:
+                    getContentPane().removeAll();
+                    panelStats.setVisible(true);
+                    add(panelStats);
+                    panelStats.revalidate();
+                    panelStats.repaint();
+                }
+                else if (!flagValidation){ // When game data could not be updated (error: incorrect game ID).
+                    System.out.println("INVALID GAME ID\n");
+                    JOptionPane.showMessageDialog(rootPane, "Update failed! Please enter correct game ID"); 
+                } 
+            }
+        });
+        //////for game menu's remove game menu:
+        btnSubmitRemoveGame.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Getting data from text field to store in variable:
+                String gameId = txtfldValidateGame.getText();
+                // Sending gameID to Main class and calling function to remove game:
+                Main.removeVideoGame(gameId);
+                // Resetting text field
+                txtfldValidateGame.setText("");
+                // Validation for message dialog box:
+                if (flagValidation) { // When game data is removed successfully.
+                    System.out.println(Main.gameList + "\n");
+                    JOptionPane.showMessageDialog(rootPane,"Removed successfully!");
+                    // Resetting game counter to display on stats menu panel:
+                    lblTotalGame.setText("Total Video Games: " + (Main.gameCounter + 1));
+                    // Calling main menu's submenu stats panel:
+                    getContentPane().removeAll();
+                    panelStats.setVisible(true);
+                    add(panelStats);
+                    panelStats.revalidate();
+                    panelStats.repaint();        
+                }
+                else if (!flagValidation) { // error: incorrect game ID, hence could not be removed.
+                    System.out.println("INVALID GAME ID\n");
+                    JOptionPane.showMessageDialog(rootPane, "Remove failed! Please enter correct game ID"); 
+
+                }
+            }
+        });
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    } /*end of constructor*/
+    
+    
+    
+    ////////// FUNCTION TO SET MENU BAR:
+    public void settingsMenuBar() {
         menuMain.add(itemStats);
-        
         menuGame.add(itemAddGame);
         menuGame.add(itemUpdateGame);
         menuGame.add(itemRemoveGame);
-        menuGame.add(itemSearchGame);
+        menuGame.add(itemDisplayGame);
         
         menuBar.add(menuMain);
         menuBar.add(menuGame);
@@ -104,68 +303,12 @@ public class GUImain extends JFrame{
         menuBar.add(menuCustomer);
         menuBar.add(menuTransaction);
         menuBar.setVisible(true);
-        
-        
-        // Components' settings:
-            //.....for main menu's stats panel:
-        lblTotalGame.setBounds(100,195,300,40);
-        lblTotalGame.setForeground(colorWhite);
-        lblTotalStaff.setBounds(100,245,300,40);
-        lblTotalStaff.setForeground(colorWhite);
-        lblTotalCustomer.setBounds(100,295,300,40);
-        lblTotalCustomer.setForeground(colorWhite);
-        lblCompanyName.setFont(new Font("Calibri", 0, 42));
-        lblCompanyName.setBounds(165,55,300,50);
-        lblCompanyName.setForeground(colorWhite);
-        lblProjectName.setFont(fontSubtext);
-        lblProjectName.setBounds(146,85,300,50);
-        lblProjectName.setForeground(colorWhite);
-            //.....for game menu's add game panel:
-        lblAddGameMenu.setFont(fontSubtext);
-        lblAddGameMenu.setBounds(180,22,300,50);
-        lblAddGameMenu.setForeground(colorWhite);
-        lblGameId.setBounds(80, 90, 150, 50);
-        lblGameId.setForeground(colorWhite);
-        lblGameTitle.setBounds(80, 130, 150, 50);
-        lblGameTitle.setForeground(colorWhite);
-        lblGamePlatform.setBounds(80, 170, 150, 50);
-        lblGamePlatform.setForeground(colorWhite);
-        lblGameTotalCopies.setBounds(80, 210, 150, 50);
-        lblGameTotalCopies.setForeground(colorWhite);
-        lblGameRentedCopies.setBounds(80, 250, 150, 50);
-        lblGameRentedCopies.setForeground(colorWhite);
-        lblGamePrice.setBounds(80, 290, 150, 50);
-        lblGamePrice.setForeground(colorWhite);
-        txtfldGameId.setBounds(225, 105, 180, 25);
-        txtfldGameTitle.setBounds(225, 145, 180, 25);
-        txtfldGamePlatform.setBounds(225, 185, 180, 25);
-        txtfldGameTotalCopies.setBounds(225, 225, 180, 25);
-        txtfldGameRentedCopies.setBounds(225, 265, 180, 25);
-        txtfldGamePrice.setBounds(225, 305, 180, 25);
-        btnSubmitAddGame.setBounds(210, 360, 80, 25);
-        
-        
-        
-        lblUpdateGameMenu.setFont(fontSubtext);
-        lblUpdateGameMenu.setBounds(165,22,300,50);
-        lblUpdateGameMenu.setForeground(colorWhite);        
-        
-        lblRemoveGameMenu.setFont(fontSubtext);
-        lblRemoveGameMenu.setBounds(165,22,300,50);
-        lblRemoveGameMenu.setForeground(colorWhite);
-        
-        lblSearchGameMenu.setFont(fontSubtext);
-        lblSearchGameMenu.setBounds(120,22,300,50);
-        lblSearchGameMenu.setForeground(colorWhite);
-        
-        
-        
-        
-        
-        
-        
-        // Panel settings:
-            //.....for main menu's stats panel:
+    }
+    
+    
+    ////////// FUNCTIONS FOR SETTING PANELS:
+    public void panelSettingsStats() {
+        compSettingsStatsPanel();
         panelStats.setLayout(null);
         panelStats.setVisible(true);
         panelStats.setSize(500,480);
@@ -175,7 +318,10 @@ public class GUImain extends JFrame{
         panelStats.add(lblTotalCustomer);
         panelStats.add(lblCompanyName);
         panelStats.add(lblProjectName);
-            //.....for game menu's add game panel:
+        
+    }    
+    public void panelSettingsAddGame() {
+        compSettingsAddGamePanel();
         panelAddGame.setLayout(null);
         panelAddGame.setVisible(false);
         panelAddGame.setSize(500,480);
@@ -194,126 +340,139 @@ public class GUImain extends JFrame{
         panelAddGame.add(txtfldGameRentedCopies);
         panelAddGame.add(txtfldGamePrice);
         panelAddGame.add(btnSubmitAddGame);
-        
+    }
+    public void panelSettingsUpdateGame() {
+        compSettingsUpdateGamePanel();
         panelUpdateGame.setLayout(null);
         panelUpdateGame.setVisible(false);
         panelUpdateGame.setSize(500,480);
         panelUpdateGame.setBackground(colorVeryBlue);
         panelUpdateGame.add(lblUpdateGameMenu);
-        
+        panelUpdateGame.add(lblValidateGame);
+        panelUpdateGame.add(lblGameTitle);
+        panelUpdateGame.add(lblGamePlatform);
+        panelUpdateGame.add(lblGameTotalCopies);
+        panelUpdateGame.add(lblGameRentedCopies);
+        panelUpdateGame.add(lblGamePrice);
+        panelUpdateGame.add(txtfldValidateGame);
+        panelUpdateGame.add(txtfldGameTitle);
+        panelUpdateGame.add(txtfldGamePlatform);
+        panelUpdateGame.add(txtfldGameTotalCopies);
+        panelUpdateGame.add(txtfldGameRentedCopies);
+        panelUpdateGame.add(txtfldGamePrice);
+        panelUpdateGame.add(btnSubmitUpdateGame);
+    }
+    public void panelSettingsRemoveGame() {
+        compSettingsRemoveGamePanel();
         panelRemoveGame.setLayout(null);
         panelRemoveGame.setVisible(false);
         panelRemoveGame.setSize(500,480);
         panelRemoveGame.setBackground(colorVeryBlue);
         panelRemoveGame.add(lblRemoveGameMenu);
-        
-        panelSearchGame.setLayout(null);
-        panelSearchGame.setVisible(false);
-        panelSearchGame.setSize(500,480);
-        panelSearchGame.setBackground(colorVeryBlue);
-        panelSearchGame.add(lblSearchGameMenu);
-        
-        
-        
-        // Adding to JFrame:
-        super.add(panelStats);
-        super.add(panelAddGame);
-        super.add(panelUpdateGame);
-        super.add(panelRemoveGame);
-        super.add(panelSearchGame);
-        
-        super.setJMenuBar(menuBar);
-        super.setVisible(true);
-        
-        
-        
-        // Action Listeners for menu calls:
-            //.....for main menu's stats menu panel call:        
-        itemStats.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Calling main menu's stats panel:
-                getContentPane().removeAll();
-                panelStats.setVisible(true);
-                add(panelStats);
-                panelStats.revalidate();
-                panelStats.repaint();
-            }
-        });
-            //.....for game menu's sub-menu (add game) panel call:
-        itemAddGame.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                getContentPane().removeAll();
-                panelAddGame.setVisible(true);
-                add(panelAddGame);
-                panelAddGame.revalidate();
-                panelAddGame.repaint();
-            }
-        });        
-            //.....for game menu's sub-menu (update game) panel call:
-        itemUpdateGame.addActionListener(new ActionListener () {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Calling update game panel:
-                getContentPane().removeAll();
-                panelUpdateGame.setVisible(true);
-                add(panelUpdateGame);
-                panelUpdateGame.revalidate();
-                panelUpdateGame.repaint(); 
-            }
-        });
-            //.....for game menu's sub-menu (remove game) panel call:
-        itemRemoveGame.addActionListener(new ActionListener () {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Calling remove game panel:
-                getContentPane().removeAll();
-                panelRemoveGame.setVisible(true);
-                add(panelRemoveGame);
-                panelRemoveGame.revalidate();
-                panelRemoveGame.repaint(); 
-            }
-        });
-            //.....for game menu's sub-menu (search game) panel call:
-        itemSearchGame.addActionListener(new ActionListener () {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Calling search game panel:
-                getContentPane().removeAll();
-                panelSearchGame.setVisible(true);
-                add(panelSearchGame);
-                panelSearchGame.revalidate();
-                panelSearchGame.repaint(); 
-            }
-        });
-        
-        
-        // Action Listeners for buttons:
-            //.....for game menu's add game menu:
-        btnSubmitAddGame.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-            // Submits game data to add it in ArrayList, then returns to main menu stats panel.
-            
-                // Functionality to add data to Arraylist
-                getContentPane().removeAll();
-                panelStats.setVisible(true);
-                add(panelStats);
-                panelStats.revalidate();
-                panelStats.repaint();
-            }
-        });
-        
-        
-        
-        
-        
-        
+        panelRemoveGame.add(lblValidateGame);
+        panelRemoveGame.add(txtfldValidateGame);
+        panelRemoveGame.add(btnSubmitRemoveGame);
+    }
+    public void panelSettingsSearchGame() {
+        compSettingsSearchGamePanel();
+        panelDisplayGame.setLayout(null);
+        panelDisplayGame.setVisible(false);
+        panelDisplayGame.setSize(500,480);
+        panelDisplayGame.setBackground(colorVeryBlue);
+        panelDisplayGame.add(lblDisplayGameMenu);
+    }
+    
+    
+    
+    
+    
+    
+    ////////// FUNCTIONS FOR SETTING COMPONENTS TO DIFFERENT PANELS:
+     public void compSettingsStatsPanel() {
+        lblTotalGame.setBounds(100,195,300,40);
+        lblTotalGame.setForeground(colorWhite);
+        lblTotalStaff.setBounds(100,245,300,40);
+        lblTotalStaff.setForeground(colorWhite);
+        lblTotalCustomer.setBounds(100,295,300,40);
+        lblTotalCustomer.setForeground(colorWhite);
+        lblCompanyName.setFont(new Font("Calibri", 0, 42));
+        lblCompanyName.setBounds(165,55,300,50);
+        lblCompanyName.setForeground(colorWhite);
+        lblProjectName.setFont(fontSubtext);
+        lblProjectName.setBounds(146,85,300,50);
+        lblProjectName.setForeground(colorWhite);
+    }
+    public void compSettingsAddGamePanel() {
+        lblAddGameMenu.setFont(fontSubtext);
+        lblAddGameMenu.setBounds(165,22,300,50);
+        lblAddGameMenu.setForeground(colorWhite);
+        lblGameTitle.setBounds(80, 90, 150, 50);
+        lblGameTitle.setForeground(colorWhite);
+        lblGamePlatform.setBounds(80, 130, 150, 50);
+        lblGamePlatform.setForeground(colorWhite);
+        lblGameId.setBounds(80, 170, 150, 50);
+        lblGameId.setForeground(colorWhite);
+        lblGameTotalCopies.setBounds(80, 210, 150, 50);
+        lblGameTotalCopies.setForeground(colorWhite);
+        lblGameRentedCopies.setBounds(80, 250, 150, 50);
+        lblGameRentedCopies.setForeground(colorWhite);
+        lblGamePrice.setBounds(80, 290, 150, 50);
+        lblGamePrice.setForeground(colorWhite);
+        txtfldGameTitle.setBounds(225, 105, 180, 25);
+        txtfldGamePlatform.setBounds(225, 145, 180, 25);
+        txtfldGameId.setBounds(225, 185, 180, 25);
+        txtfldGameTotalCopies.setBounds(225, 225, 180, 25);
+        txtfldGameRentedCopies.setBounds(225, 265, 180, 25);
+        txtfldGamePrice.setBounds(225, 305, 180, 25);
+        btnSubmitAddGame.setBounds(202, 360, 80, 25);
+    }
+    public void compSettingsUpdateGamePanel() {
+        lblUpdateGameMenu.setFont(fontSubtext);
+        lblUpdateGameMenu.setBounds(145,22,300,50);
+        lblUpdateGameMenu.setForeground(colorWhite);        
+        lblValidateGame.setText("Enter Game ID to update its data:");
+        lblValidateGame.setBounds(45, 70, 300, 50);
+        lblValidateGame.setForeground(colorWhite);
+        lblGameTitle.setBounds(80, 130, 150, 50);
+        lblGameTitle.setForeground(colorWhite);
+        lblGamePlatform.setBounds(80, 170, 150, 50);
+        lblGamePlatform.setForeground(colorWhite);
+        lblGameTotalCopies.setBounds(80, 210, 150, 50);
+        lblGameTotalCopies.setForeground(colorWhite);
+        lblGameRentedCopies.setBounds(80, 250, 150, 50);
+        lblGameRentedCopies.setForeground(colorWhite);
+        lblGamePrice.setBounds(80, 290, 150, 50);
+        lblGamePrice.setForeground(colorWhite);
+        txtfldValidateGame.setBounds(255, 83, 180, 25);
+        txtfldGameTitle.setBounds(225, 145, 180, 25);
+        txtfldGamePlatform.setBounds(225, 185, 180, 25);
+        txtfldGameTotalCopies.setBounds(225, 225, 180, 25);
+        txtfldGameRentedCopies.setBounds(225, 265, 180, 25);
+        txtfldGamePrice.setBounds(225, 305, 180, 25);
+        btnSubmitUpdateGame.setBounds(202, 360, 80, 25);
+    }
+    public void compSettingsRemoveGamePanel() {
+        lblRemoveGameMenu.setFont(fontSubtext);
+        lblRemoveGameMenu.setBounds(160,22,300,50);
+        lblRemoveGameMenu.setForeground(colorWhite);
+        lblValidateGame.setText("Enter Game ID to remove its data:");
+        lblValidateGame.setBounds(150, 140, 300, 50);
+        lblValidateGame.setForeground(colorWhite);
+        txtfldValidateGame.setBounds(155, 190, 180, 25);
+        btnSubmitRemoveGame.setBounds(202, 320, 80, 25);
+    }
+    public void compSettingsSearchGamePanel() {
+        lblDisplayGameMenu.setFont(fontSubtext);
+        lblDisplayGameMenu.setBounds(145,22,300,50);
+        lblDisplayGameMenu.setForeground(colorWhite);
         
         
     }
-       
+    
+    
+    
+    
+    
     
     
 }

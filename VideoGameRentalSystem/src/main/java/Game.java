@@ -90,7 +90,7 @@ public class Game {
 
     @Override
     public String toString() {
-        return "Title: " + this.title + "\nPlatform: " + this.platform + "\nRental Price: " + this.rentalPrice + " RS" + "\nTotal Copies: " + this.totalCopies
+        return "\nTitle: " + this.title + "\nPlatform: " + this.platform + "\nRental Price: " + this.rentalPrice + " RS" + "\nTotal Copies: " + this.totalCopies
             + "\nRented Copies: " + this.rentedCopies + "\nAvailable Copies: " + this.availableCopies + "\nGame ID: " + this.gameId + "\n";
     }
     

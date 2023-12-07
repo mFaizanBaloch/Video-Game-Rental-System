@@ -93,8 +93,7 @@ public class Main {
                                 System.out.print("Enter game ID: ");
                                 scan.nextLine();
                                 id = scan.nextLine();
-                                
-                                
+                                 
                                 for (int i = 0; i < gameCounter + 1; i++) {
                                     Game temp = gameList.get(i);
                                     String tempId = temp.getGameId();
@@ -104,25 +103,19 @@ public class Main {
                                         System.out.println("        \nPlease enter updated data below:");
                                         System.out.print("Enter video game title (Previous title: " + temp.getTitle() + "): ");
                                         title = scan.nextLine();
-                                        temp.setTitle(title);
                                         System.out.print("Enter platform (Previous platform: " + temp.getPlatform() + "): ");                                        
                                         platform = scan.nextLine();     
-                                        temp.setPlatform(platform);
                                         System.out.print("Enter no. of total copies (Previous number: " + temp.getTotalCopies() + "): ");
                                         totalCopies = scan.nextInt();
-                                        temp.setTotalCopies(totalCopies);
                                         System.out.print("Enter no. of rented copies (Previous number: " + temp.getRentedCopies() + "): ");
                                         rentedCopies = scan.nextInt();
-                                        temp.setRentedCopies(rentedCopies);
-                                        temp.setAvailableCopies(totalCopies - rentedCopies);
                                         System.out.print("Enter game ID (Previous ID: " + temp.getGameId() + "): ");
                                         scan.nextLine();
                                         id = scan.nextLine();
-                                        temp.setGameId(id);
                                         System.out.print("Enter rental price (Previous price: " + temp.getRentalPrice() + "): ");
                                         rentalPrice = scan.nextLine();
-                                        temp.setRentalPrice(rentalPrice);
-                                        gameList.set(i, temp); // Setting updated data to required index through temp object
+                                        
+                                        updateVideoGame(id, title, platform, totalCopies, rentedCopies, rentalPrice);
                                         
                                         flag1 = true;
                                         flag2 = false;
@@ -791,41 +784,51 @@ public class Main {
     }  
 
     public static void addVideoGame(String id, String title, String platform, int totalCopies, int rentedCopies, String rentalPrice) {
-        gameCounter++; // Incrementing the game ArrayList index counter
-        Game tempGameObj = new Game(id, title, platform, totalCopies, rentedCopies, rentalPrice); // Temporary object of game
-        gameList.add(gameCounter, tempGameObj); // Appending temp to ArrayList of objects of game
+        gameCounter++; // Incrementing the game ArrayList index counter.
+        Game tempGameObj = new Game(id, title, platform, totalCopies, rentedCopies, rentalPrice); // Temporary object of game.
+        gameList.add(gameCounter, tempGameObj); // Appending temp to ArrayList of objects of game.
     }
+    
+    public static void updateVideoGame(String id, String title, String platform, int totalCopies, int rentedCopies, String rentalPrice) {
+        for (int i = 0; i < gameCounter + 1; i++) {
+            Game temp = gameList.get(i);
+            String tempId = temp.getGameId();
+            
+            if (tempId.equals(id)) { // Entering updated data to temp object.
+                GUImain.flagValidation = true;
+                temp.setTitle(title);   
+                temp.setPlatform(platform);
+                temp.setTotalCopies(totalCopies);
+                temp.setRentedCopies(rentedCopies);
+                temp.setAvailableCopies(totalCopies - rentedCopies);
+                temp.setRentalPrice(rentalPrice);
+                gameList.set(i, temp); // Temp object is set at the index of required object (acting as updated obj).
+                break;
+            }
+            else {
+                GUImain.flagValidation = false;
 
+            }
+        }
+    }
+    
+    public static void removeVideoGame(String id) {
+        for (int i = 0; i < gameCounter + 1; i++) {
+            Game temp = gameList.get(i);
+            String tempId = temp.getGameId();
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+            if (tempId.equals(id)) {
+                GUImain.flagValidation = true;
+                gameList.remove(i); // Removing object from gameList
+                gameCounter--;
+                flag1 = true;
+                flag2 = false;
+                break;
+            }
+            else {
+                GUImain.flagValidation = false;
+            }
+        }
+    }
 }
 

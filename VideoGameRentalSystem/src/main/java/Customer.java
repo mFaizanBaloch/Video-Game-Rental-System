@@ -6,14 +6,13 @@
 import java.util.ArrayList;
 
 public class Customer {
-    private String cnic = new String();
-    private String phoneNo = new String();
+    private String cnic, phoneNo, name;
     private int ongoingRentals = 0;
-    private String name = new String();
-    static ArrayList<String> gamesRented = new ArrayList<>();
+    static ArrayList<String> gamesRented;
     static int counter = -1;
             
     public Customer(String cnic, String phoneNo, int ongoingRentals, String name) {
+        gamesRented = new ArrayList<>();
         this.cnic = cnic;
         this.phoneNo = phoneNo;
         this.ongoingRentals = ongoingRentals;

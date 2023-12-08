@@ -9,18 +9,20 @@ import java.util.Scanner;
 public class Main {
     
     static Scanner scan = new Scanner(System.in);
-    static ArrayList<Game> gameList = new ArrayList<>();
-    static ArrayList<Customer> customerList = new ArrayList<>();
-    static ArrayList<Staff> staffList = new ArrayList<>();
-    public static boolean flag1 = false;
-    public static boolean flag2 = false;
-    static int staffCounter = -1;
-    static int gameCounter = -1;
-    static int customerCounter = -1;
+    static ArrayList<Game> gameList;
+    static ArrayList<Customer> customerList;
+    static ArrayList<Staff> staffList;
+    public static boolean flag1 = false, flag2 = false;
+    static int staffCounter = -1, gameCounter = -1, customerCounter = -1;
     
     public static void main(String args[]) {
+        gameList = new ArrayList<>();
+        customerList = new ArrayList<>();
+        staffList = new ArrayList<>();
+        
         GUImain gui = new GUImain();
 
+        
 //        int choice1 = 0;
 //        
 //        
@@ -674,13 +676,13 @@ public class Main {
     
     
     // FUNCTIONALITIES:
-    public static void addVideoGame(String id, String title, String platform, int totalCopies, int rentedCopies, String rentalPrice) {
+    public static void addVideoGame(String id, String title, String platform, int totalCopies, /*int rentedCopies,*/ String rentalPrice) {
         gameCounter++; // Incrementing the game ArrayList index counter.
-        Game tempGameObj = new Game(id, title, platform, totalCopies, rentedCopies, rentalPrice); // Temporary object of game.
+        Game tempGameObj = new Game(id, title, platform, totalCopies, /*rentedCopies,*/ rentalPrice); // Temporary object of game.
         gameList.add(gameCounter, tempGameObj); // Appending temp to ArrayList of objects of game.
     }
     
-    public static void updateVideoGame(String id, String title, String platform, int totalCopies, int rentedCopies, String rentalPrice) {
+    public static void updateVideoGame(String id, String title, String platform, int totalCopies, /*int rentedCopies,*/ String rentalPrice) {
         for (int i = 0; i < gameCounter + 1; i++) {
             Game temp = gameList.get(i);
             String tempId = temp.getGameId();
@@ -690,8 +692,8 @@ public class Main {
                 temp.setTitle(title);   
                 temp.setPlatform(platform);
                 temp.setTotalCopies(totalCopies);
-                temp.setRentedCopies(rentedCopies);
-                temp.setAvailableCopies(totalCopies - rentedCopies);
+//                temp.setRentedCopies(rentedCopies);
+//                temp.setAvailableCopies(totalCopies - rentedCopies);
                 temp.setRentalPrice(rentalPrice);
                 gameList.set(i, temp); // Temp object is set at the index of required object (acting as updated obj).
                 break;

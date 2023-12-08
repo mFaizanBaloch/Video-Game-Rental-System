@@ -4,10 +4,8 @@
 //Project Title: Video Game Rental System
 
 public class Staff {
-    private String staffId = new String();
-    private String staffName = new String();
-    private String staffRank = new String();
-
+    private String staffId, staffName, staffRank;
+    
     public Staff(String staffId, String staffName, String staffRank) {
         this.staffId = staffId;
         this.staffName = staffName;

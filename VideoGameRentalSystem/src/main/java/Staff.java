@@ -4,12 +4,13 @@
 //Project Title: Video Game Rental System
 
 public class Staff {
-    private String staffId, staffName, staffRank;
+    private String staffId, staffName, staffUsername, staffPassword;
     
-    public Staff(String staffId, String staffName, String staffRank) {
+    public Staff(String staffId, String staffName, String staffUsername, String staffPassword) {
         this.staffId = staffId;
         this.staffName = staffName;
-        this.staffRank = staffRank;
+        this.staffUsername = staffUsername;
+        this.staffPassword = staffPassword;
     }
 
     public String getStaffId() {
@@ -28,16 +29,24 @@ public class Staff {
         this.staffName = staffName;
     }
 
-    public String getStaffRank() {
-        return this.staffRank;
+    public String getStaffUsername() {
+        return staffUsername;
     }
 
-    public void setStaffRank(String staffRank) {
-        this.staffRank = staffRank;
+    public void setStaffUsername(String staffUsername) {
+        this.staffUsername = staffUsername;
     }
 
+    public String getStaffPassword() {
+        return staffPassword;
+    }
+
+    public void setStaffPassword(String staffPassword) {
+        this.staffPassword = staffPassword;
+    }
+    
     @Override
     public String toString() {
-        return "Name: " + this.staffName + "\nID: " + this.staffId + "\nRank: " + this.staffRank + "\n";
+        return "\nName: " + this.staffName + "\nID: " + this.staffId + "\nUsername: " + this.staffUsername + "\nPass: " + this.staffPassword + "\n";
     }
 }

@@ -3,19 +3,28 @@
 //FA22-BCS-135 Mohammad Faizan
 //Project Title: Video Game Rental System
 
-public class Game {
+public class Game {            
     private String gameId, title, rentalPrice;
     private int totalCopies;
+    private Platform platform;
     
-    private String platform; // (to be changed to enum)
+//    private String pltf; // (to be changed to enum)
 //    private int rentedCopies, availableCopies; // (discarded)
     
-    public Game(String gameId, String title, String platform, int totalCopies, /*int rentedCopies,*/ String rentalPrice) {
+    public Game(String gameId, String title, String pltf, int totalCopies, /*int rentedCopies,*/ String rentalPrice) {
         this.gameId = gameId;
         this.title = title;
-        this.platform = platform;
         this.totalCopies = totalCopies;
         this.rentalPrice = rentalPrice;
+        
+        if (pltf.equals("XBOX")) {
+            platform = Platform.XBOX;
+        }
+        else if (pltf.equals("PS4")) {
+            platform = Platform.PS4;
+        }
+        
+//        this.pltf = pltf;
 //        this.rentedCopies = rentedCopies;
 //        availableCopies = totalCopies - rentedCopies;
     }
@@ -36,13 +45,17 @@ public class Game {
         this.title = title;
     }
 
-    public String getPlatform() {
+    public Platform getPlatform() {
         return this.platform;
     }
 
-    public void setPlatform(String platform) {
-        this.platform = platform;
-    }
+    public void setPlatform(String pltf) {
+        if (pltf.equals("XBOX")) {
+            platform = Platform.XBOX;
+        }
+        else if (pltf.equals("PS4")) {
+            platform = Platform.PS4;
+        }    }
     
     public int getTotalCopies() {
         return this.totalCopies;
@@ -96,5 +109,4 @@ public class Game {
         // int x has no use, it is only to overload toString() function.
         return this.title + ", " + this.platform + ", " + this.rentalPrice + " RS, " + this.gameId + ", " + this.totalCopies + "\n";
     }
-    
 }

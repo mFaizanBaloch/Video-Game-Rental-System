@@ -20,8 +20,12 @@ public class Main {
         customerList = new ArrayList<>();
         staffList = new ArrayList<>();
         
-        GUImain gui = new GUImain();
-
+//        GUImain guimain = new GUImain();
+        GUIinitial guiinitial = new GUIinitial();
+        
+        Rental test = new Rental("", "", "", "5");
+        System.out.println(test.getPurchase());
+        System.out.println(test.getRetrn());
         
 //        int choice1 = 0;
 //        
@@ -384,13 +388,13 @@ public class Main {
 //                                String name = scan.nextLine();
 //                                System.out.print("Enter staff ID: ");
 //                                String id = scan.nextLine();
-//                                System.out.print("Enter staff rank: ");
-//                                String rank = scan.nextLine();
+//                                System.out.print("Enter staff username: ");
+//                                String username = scan.nextLine();
+//                                System.out.print("Enter staff password: ");
+//                                String password = scan.nextLine();
 //                                
-//                                staffCounter++; // Incrementing the staff ArrayList index counter
-//                                Staff tempStaffObj = new Staff(id, name, rank); // Temporary object of staff
-//                                staffList.add(staffCounter, tempStaffObj); // Appending temp to ArrayList of objects of staff
-//                                
+//                                addStaff(id, name, username, password);
+//
 //                                flag1 = true;
 //                                choice2 = 0;
 //                                break;
@@ -676,21 +680,21 @@ public class Main {
     
     
     // FUNCTIONALITIES:
-    public static void addVideoGame(String id, String title, String platform, int totalCopies, /*int rentedCopies,*/ String rentalPrice) {
+    public static void addVideoGame(String id, String title, String pltf, int totalCopies, /*int rentedCopies,*/ String rentalPrice) {
         gameCounter++; // Incrementing the game ArrayList index counter.
-        Game tempGameObj = new Game(id, title, platform, totalCopies, /*rentedCopies,*/ rentalPrice); // Temporary object of game.
+        Game tempGameObj = new Game(id, title, pltf, totalCopies, /*rentedCopies,*/ rentalPrice); // Temporary object of game.
         gameList.add(gameCounter, tempGameObj); // Appending temp to ArrayList of objects of game.
     }
-    
-    public static void updateVideoGame(String id, String title, String platform, int totalCopies, /*int rentedCopies,*/ String rentalPrice) {
+    public static void updateVideoGame(String id, String title, String pltf, int totalCopies, /*int rentedCopies,*/ String rentalPrice) {
         for (int i = 0; i < gameCounter + 1; i++) {
             Game temp = gameList.get(i);
             String tempId = temp.getGameId();
             
             if (tempId.equals(id)) { // Entering updated data to temp object.
+                System.out.println("check");
                 GUImain.flagValidation = true;
                 temp.setTitle(title);   
-                temp.setPlatform(platform);
+                temp.setPlatform(pltf);
                 temp.setTotalCopies(totalCopies);
 //                temp.setRentedCopies(rentedCopies);
 //                temp.setAvailableCopies(totalCopies - rentedCopies);
@@ -704,7 +708,6 @@ public class Main {
             }
         }
     }
-    
     public static void removeVideoGame(String id) {
         for (int i = 0; i < gameCounter + 1; i++) {
             Game temp = gameList.get(i);
@@ -723,6 +726,17 @@ public class Main {
             }
         }
     }
+    
+    
+    public static void addStaff(String id, String name, String username, String password) {
+        staffCounter++; // Incrementing the staff ArrayList index counter
+        Staff tempStaffObj = new Staff(id, name, username, password); // Temporary object of staff
+        staffList.add(staffCounter, tempStaffObj); // Appending temp to ArrayList of objects of staff
+    }
+    
+    
+    
+    
     
     
     

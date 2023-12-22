@@ -18,28 +18,41 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 public class GUImain extends JFrame {
 
     // DECLARATIONS :
     static boolean flagValidation =  false;
-
-    Font fontSubtext; // Subtext is for general text used everywhere
-    Color colorVeryBlue, colorWhite; // VeryBlue for backgrounds, White for foregrounds
-    JPanel panelStats, panelAddGame, panelUpdateGame, panelRemoveGame, panelDisplayGame;
+    static Staff activeLogin;  // For setting the active staff member who is accessing the system.
+    
+    
+    Font fontSubtext;                                                                                               // for setting default font
+    Color colorVeryBlue, colorWhite;                                                                                // VeryBlue for backgrounds, White for foregrounds
+    JPanel panelStats, panelAddGame, panelUpdateGame, panelRemoveGame, panelDisplayGame,
+            panelDisplayStaff, panelRemoveStaff;
     JMenuBar menuBar;
     JMenu menuMain, menuGame, menuStaff, menuCustomer, menuTransaction;
-    JMenuItem itemAddGame, itemUpdateGame, itemRemoveGame, itemDisplayGame, itemStats;
-    JLabel lblTotalGame, lblTotalStaff, lblTotalCustomer, lblCompanyName, lblProjectName; // for stats panel
-    JLabel lblAddGameMenu, lblUpdateGameMenu, lblRemoveGameMenu, lblDisplayGameMenu; //for game menu's sub menus
-    JLabel lblGameId, lblGameTitle, lblGamePlatform, lblGameTotalCopies, lblGamePrice /*, lblGameRentedCopies*/; // for add, update game panels
-    JLabel lblValidateGame; //for update, remove game panels
-    JButton btnSubmitAddGame, btnSubmitUpdateGame, btnSubmitRemoveGame; // submit buttons
-    JTable tableTest = new JTable(25, 5);        
-    JTextField txtfldGameId, txtfldGameTitle, /*txtfldGamePlatform,*/ txtfldGameTotalCopies, txtfldGamePrice, txtfldValidateGame /*, txtfldGameRentedCopies*/; // for add, update game panels
-    JRadioButton rdBtnPlatformXBOX, rdBtnPlatformPS4; // for add, update game panels
-    ButtonGroup platf = new ButtonGroup(); // for add, update game panels
+    JMenuItem itemAddGame, itemUpdateGame, itemRemoveGame, itemDisplayGame, itemStats;                              // game menu + main menu items
+    JMenuItem itemDisplayStaff, itemRemoveStaff;                                                                    // staff menu items
+    JLabel lblTotalGame, lblTotalStaff, lblTotalCustomer, lblCompanyName, lblProjectName;                           // for stats panel
+    JLabel lblAddGameMenu, lblUpdateGameMenu, lblRemoveGameMenu, lblDisplayGameMenu;                                // for all submenus of game menu
+    JLabel lblDisplayStaffMenu;                                                                                     // for all submenus of game menu
+    JLabel lblGameId, lblGameTitle, lblGamePlatform, lblGameTotalCopies, lblGamePrice; /*, lblGameRentedCopies;*/   // for add game + update game panels
+    JLabel lblValidateGame;                                                                                         // for update game + remove game panels
+    JLabel lblRemovalMessage, lblCaptcha;                                                                           // for remove staff panel
+    JButton btnSubmitAddGame, btnSubmitUpdateGame, btnSubmitRemoveGame;                                             // submit buttons
+    JButton btnProceedRemoveStaff;                                                                                  // proceed buttons
+    JTable tableGame = new JTable(25, 5);
+    JTable tableStaff = new JTable(25,3);
+    JTextField txtfldGameId, txtfldGameTitle, txtfldGameTotalCopies, txtfldGamePrice, txtfldValidateGame;           // for add game + update game panels
+            /*, txtfldGameRentedCopies, txtfldGamePlatform;*/
+    JTextField txtfldCaptcha;                                                                                       // for remove staff panel
+    JTextArea txtareaRemoveStaff;                                                                                   // for remove staff panel
+    JRadioButton rdBtnPlatformXBOX, rdBtnPlatformPS4;                                                               // for add game + update game panels
+    ButtonGroup platf = new ButtonGroup();                                                                          // for XBOX and PS4 choice radio buttons
+    
     
     // CONSTRUCTOR :
     public GUImain(){        
@@ -48,7 +61,6 @@ public class GUImain extends JFrame {
         settingsMenuBar();      // Sets up Menu bar.
         panelSettingsStats();   // Sets up Stats panel (acts as summary page).
         
-
 
 
         // JFRAME SETTINGS :
@@ -122,6 +134,29 @@ public class GUImain extends JFrame {
                 panelDisplayGame.repaint();  
             }
         });
+        itemDisplayStaff.addActionListener(new ActionListener () {      // Calls Display staff panel.
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                panelSettingsDisplayStaff();
+                getContentPane().removeAll();
+                panelDisplayStaff.setVisible(true);
+                add(panelDisplayStaff);
+                panelDisplayStaff.revalidate();
+                panelDisplayStaff.repaint();
+            }
+        });
+        itemRemoveStaff.addActionListener(new ActionListener () {      // Calls Remove staff panel.
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                panelSettingsRemoveStaff();
+                getContentPane().removeAll();
+                panelRemoveStaff.setVisible(true);
+                add(panelRemoveStaff);
+                panelRemoveStaff.revalidate();
+                panelRemoveStaff.repaint();
+            }
+        });
+        
         
         
         
@@ -157,7 +192,7 @@ public class GUImain extends JFrame {
                 txtfldGamePrice.setText("");
                 lblTotalGame.setText("Total Video Games: " + (Main.gameCounter + 1));
                 // Success notification:
-                JOptionPane.showMessageDialog(rootPane, "Game added successfully!"); 
+                JOptionPane.showMessageDialog(rootPane, "Game added successfully!", "", 1); 
                 // Calling Stats panel:
                 getContentPane().removeAll();
                 panelStats.setVisible(true);
@@ -197,7 +232,7 @@ public class GUImain extends JFrame {
                 // Validation messages:
                 if (flagValidation) { // When game data is updated successfully.
                     System.out.println(Main.gameList + "\n"); // (test display)
-                    JOptionPane.showMessageDialog(rootPane, "Updated successfully!");    
+                    JOptionPane.showMessageDialog(rootPane, "Updated successfully!", "", 1);    
                     // Calling Stats panel:
                     getContentPane().removeAll();
                     panelStats.setVisible(true);
@@ -207,7 +242,7 @@ public class GUImain extends JFrame {
                 }
                 else if (!flagValidation){ // When game data could not be updated (error: incorrect game ID).
                     System.out.println("INVALID GAME ID\n");
-                    JOptionPane.showMessageDialog(rootPane, "Update failed! Please enter correct game ID"); 
+                    JOptionPane.showMessageDialog(rootPane, "Update failed! Please enter correct game ID", "", 0); 
                 } 
             }
         });
@@ -221,7 +256,7 @@ public class GUImain extends JFrame {
                 // Validation messages:
                 if (flagValidation) { // When game data is removed successfully.
                     System.out.println(Main.gameList + "\n"); // (test display)
-                    JOptionPane.showMessageDialog(rootPane,"Removed successfully!");
+                    JOptionPane.showMessageDialog(rootPane,"Removed successfully!", "", 0);
                     // Resetting Stats panel game label:
                     lblTotalGame.setText("Total Video Games: " + (Main.gameCounter + 1));
                     // Calling Stats panel:
@@ -233,10 +268,55 @@ public class GUImain extends JFrame {
                 }
                 else if (!flagValidation) { // error: incorrect game ID, hence could not be removed.
                     System.out.println("INVALID GAME ID\n");
-                    JOptionPane.showMessageDialog(rootPane, "Remove failed! Please enter correct game ID"); 
+                    JOptionPane.showMessageDialog(rootPane, "Remove failed! Please enter correct game ID", "", 0); 
                 }
             }
         });
+        btnProceedRemoveStaff.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (txtfldCaptcha.getText().equals("I HAVE FULLY READ AND I FULLY AGREE")) {
+                    int inp = JOptionPane.showConfirmDialog(rootPane, "You are about to delete your account, proceed?", "Warning!", 0, 2);
+                    if (inp == 0) {
+                        String passInp = JOptionPane.showInputDialog(rootPane, "Enter your password to delete your account (LAST CHANCE TO REVERT!)");
+                        if (passInp.equals(activeLogin.getStaffPassword())) {
+                            Main.removeStaff(activeLogin.getStaffUsername());
+                            
+                            
+                            activeLogin = null;
+                            dispose();
+                            GUIinitial guiinitial = new GUIinitial();
+                            JOptionPane.showMessageDialog(rootPane, "Your account was deleted.", "", 1);
+                        }
+                        else {
+                            JOptionPane.showMessageDialog(rootPane, "Something went wrong!", "", 0);
+                            getContentPane().removeAll();
+                            panelStats.setVisible(true);
+                            add(panelStats);
+                            panelStats.revalidate();
+                            panelStats.repaint();   
+                        }
+                    }
+                    else if (inp == 1) {
+                        JOptionPane.showMessageDialog(rootPane, "Redirecting to main menu", "", 1);
+                        getContentPane().removeAll();
+                        panelStats.setVisible(true);
+                        add(panelStats);
+                        panelStats.revalidate();
+                        panelStats.repaint();   
+                    }
+                }
+                else {
+                    JOptionPane.showMessageDialog(rootPane, "Incorrect captcha!", "", 0);
+                    txtfldCaptcha.setText("");
+                }
+                
+                
+                
+            }       
+        });
+        
+        
         
         
         
@@ -250,16 +330,18 @@ public class GUImain extends JFrame {
     // FUNCTIONS FOR INITIALIZATION :
     public void initMenuBar() {             // Initializes submenus for menubar.
         menuBar = new JMenuBar();
-        menuMain = new JMenu("Main");
+        menuMain = new JMenu("Dashboard");
         menuGame = new JMenu("Game");
         menuStaff = new JMenu("Staff");
         menuCustomer =  new JMenu("Customer");
-        menuTransaction = new JMenu("Transaction");    
-        itemAddGame = new JMenuItem("Add Game");
-        itemUpdateGame = new JMenuItem("Update Game");
-        itemRemoveGame = new JMenuItem("Remove Game");
-        itemDisplayGame = new JMenuItem("Display Game");
+        menuTransaction = new JMenu("Transactions");    
+        itemAddGame = new JMenuItem("Add");
+        itemUpdateGame = new JMenuItem("Update");
+        itemRemoveGame = new JMenuItem("Remove");
+        itemDisplayGame = new JMenuItem("Inventory");
         itemStats = new JMenuItem("Stats");
+        itemDisplayStaff = new JMenuItem("Display all members");
+        itemRemoveStaff = new JMenuItem("Remove my account");
     }
     public void initComponents() {          // Initializes all components and panels.
         panelStats = new JPanel();
@@ -267,6 +349,8 @@ public class GUImain extends JFrame {
         panelUpdateGame = new JPanel();
         panelRemoveGame = new JPanel();
         panelDisplayGame = new JPanel();
+        panelDisplayStaff = new JPanel();
+        panelRemoveStaff = new JPanel();
         
         lblTotalGame = new JLabel("Total Video Games: " + (Main.gameCounter + 1));
         lblTotalStaff = new JLabel("Total Staff Members: " + (Main.staffCounter + 1));
@@ -277,6 +361,7 @@ public class GUImain extends JFrame {
         lblUpdateGameMenu = new JLabel("Update a Video Game's data");
         lblRemoveGameMenu = new JLabel("Remove a Video Game");
         lblDisplayGameMenu = new JLabel("Displaying all Video Games");
+        lblDisplayStaffMenu = new JLabel("Displaying all Staff members");
         lblGameId = new JLabel("Enter Game ID:");
         lblGameTitle = new JLabel("Enter Title:");
         lblGamePlatform = new JLabel("Select Platform:");
@@ -284,6 +369,8 @@ public class GUImain extends JFrame {
 //        lblGameRentedCopies = new JLabel("Enter Rented Copies:");
         lblGamePrice = new JLabel("Enter Price:");
         lblValidateGame = new JLabel();
+        lblRemovalMessage = new JLabel();
+        lblCaptcha = new JLabel();
         
         txtfldGameId = new JTextField();
         txtfldGameTitle = new JTextField();
@@ -292,10 +379,14 @@ public class GUImain extends JFrame {
 //        txtfldGameRentedCopies = new JTextField();
         txtfldGamePrice = new JTextField();
         txtfldValidateGame = new JTextField();
+        txtfldCaptcha = new JTextField();
+        
+        txtareaRemoveStaff = new JTextArea();
         
         btnSubmitAddGame = new JButton("Submit");
         btnSubmitUpdateGame = new JButton("Submit");
         btnSubmitRemoveGame = new JButton("Submit");
+        btnProceedRemoveStaff = new JButton("Proceed");
         
         rdBtnPlatformXBOX = new JRadioButton("XBOX");
         rdBtnPlatformPS4 = new JRadioButton("PS4");
@@ -318,6 +409,8 @@ public class GUImain extends JFrame {
         menuGame.add(itemUpdateGame);
         menuGame.add(itemRemoveGame);
         menuGame.add(itemDisplayGame);
+        menuStaff.add(itemDisplayStaff);
+        menuStaff.add(itemRemoveStaff);
         
         menuBar.add(menuMain);
         menuBar.add(menuGame);
@@ -337,7 +430,6 @@ public class GUImain extends JFrame {
         panelStats.add(lblTotalCustomer);
         panelStats.add(lblCompanyName);
         panelStats.add(lblProjectName);
-        
     }    
     public void panelSettingsAddGame() {            // Settings for Add game panel.  
         compSettingsAddGamePanel();
@@ -404,7 +496,29 @@ public class GUImain extends JFrame {
         panelDisplayGame.setSize(500,480);
         panelDisplayGame.setBackground(colorVeryBlue);
         panelDisplayGame.add(lblDisplayGameMenu);
-        panelDisplayGame.add(tableTest);
+        panelDisplayGame.add(tableGame);
+    }
+    public void panelSettingsDisplayStaff() {       // Settings for Display staff panel.
+        compSettingsDisplayStaffPanel();
+        getContentPane().removeAll();
+        panelDisplayStaff.setLayout(null);
+        panelDisplayStaff.setVisible(false);
+        panelDisplayStaff.setSize(500, 480);
+        panelDisplayStaff.setBackground(colorVeryBlue);
+        panelDisplayStaff.add(lblDisplayStaffMenu);
+        panelDisplayStaff.add(tableStaff);
+    }
+    public void panelSettingsRemoveStaff() {        // Settings for Remove staff panel.
+        compSettingsRemoveStaffPanel();
+        panelRemoveStaff.setLayout(null);
+        panelRemoveStaff.setVisible(false);
+        panelRemoveStaff.setSize(500,480);
+        panelRemoveStaff.setBackground(colorVeryBlue);
+        panelRemoveStaff.add(lblRemovalMessage);
+        panelRemoveStaff.add(lblCaptcha);
+        panelRemoveStaff.add(txtfldCaptcha);
+        panelRemoveStaff.add(txtareaRemoveStaff);
+        panelRemoveStaff.add(btnProceedRemoveStaff);
     }
     
     
@@ -515,53 +629,99 @@ public class GUImain extends JFrame {
         lblDisplayGameMenu.setBounds(145,22,300,50);
         lblDisplayGameMenu.setForeground(colorWhite);        
         
-        tableTest.revalidate();
-        tableTest.repaint();
+        tableGame.revalidate();
+        tableGame.repaint();
+        tableGame.setDefaultEditor(Object.class, null);
 
-        tableTest.setBounds(15,75,455,320);
-        tableTest.getColumnModel().getColumn(0).setPreferredWidth(200);
-//        tableTest.getColumnModel().getColumn(1).setPreferredWidth(45);
-        tableTest.getColumnModel().getColumn(2).setPreferredWidth(45);
-//        tableTest.getColumnModel().getColumn(3).setPreferredWidth(85);
-        tableTest.getColumnModel().getColumn(4).setPreferredWidth(45);
-//        tableTest.getColumnModel().getColumn(5).setPreferredWidth(40);
-//        tableTest.getColumnModel().getColumn(6).setPreferredWidth(40);
-        
-        
-        
+        tableGame.setBounds(15,75,455,320);
+        tableGame.getColumnModel().getColumn(0).setPreferredWidth(200);
+//        tableGame.getColumnModel().getColumn(1).setPreferredWidth(45);
+        tableGame.getColumnModel().getColumn(2).setPreferredWidth(45);
+//        tableGame.getColumnModel().getColumn(3).setPreferredWidth(85);
+        tableGame.getColumnModel().getColumn(4).setPreferredWidth(45);
+//        tableGame.getColumnModel().getColumn(5).setPreferredWidth(40);
+//        tableGame.getColumnModel().getColumn(6).setPreferredWidth(40);
+
         // Resetting table enteries:
         for (int i = 0; i < 25; i++) {
-            tableTest.setValueAt("", i, 0);
-            tableTest.setValueAt("", i, 1);
-            tableTest.setValueAt("", i, 2);
-            tableTest.setValueAt("", i, 3);
-            tableTest.setValueAt("", i, 4);
+            tableGame.setValueAt("", i, 0);
+            tableGame.setValueAt("", i, 1);
+            tableGame.setValueAt("", i, 2);
+            tableGame.setValueAt("", i, 3);
+            tableGame.setValueAt("", i, 4);
         }
 
         // Presetting headings:
-        tableTest.setValueAt("TITLE", 0, 0);
-        tableTest.setValueAt("PLATFORM", 0, 1);
-        tableTest.setValueAt("TOTAL", 0, 2);
-        tableTest.setValueAt("GAME ID", 0, 3);
-        tableTest.setValueAt("RS", 0, 4);
-//        tableTest.setValueAt("RC", 0, 5);
-//        tableTest.setValueAt("AC", 0, 6);
+        tableGame.setValueAt("TITLE", 0, 0);
+        tableGame.setValueAt("PLATFORM", 0, 1);
+        tableGame.setValueAt("TOTAL", 0, 2);
+        tableGame.setValueAt("GAME ID", 0, 3);
+        tableGame.setValueAt("RS", 0, 4);
+//        tableGame.setValueAt("RC", 0, 5);
+//        tableGame.setValueAt("AC", 0, 6);
         
         // Populating the table with latest data:
         for (int i = 0; i < Main.gameCounter + 1; i++) {
-            tableTest.setValueAt(Main.gameList.get(i).getTitle(), i+1, 0);
-            tableTest.setValueAt(Main.gameList.get(i).getPlatform(), i+1, 1);
-            tableTest.setValueAt(Main.gameList.get(i).getTotalCopies(), i+1, 2);
-            tableTest.setValueAt(Main.gameList.get(i).getGameId(), i+1, 3);
-            tableTest.setValueAt(Main.gameList.get(i).getRentalPrice(), i+1, 4);
-
-//            tableTest.setValueAt(Main.gameList.get(i).getRentedCopies(), i+1, 5);
-//            tableTest.setValueAt(Main.gameList.get(i).getAvailableCopies(), i+1, 6);
+            tableGame.setValueAt(Main.gameList.get(i).getTitle(), i+1, 0);
+            tableGame.setValueAt(Main.gameList.get(i).getPlatform(), i+1, 1);
+            tableGame.setValueAt(Main.gameList.get(i).getTotalCopies(), i+1, 2);
+            tableGame.setValueAt(Main.gameList.get(i).getGameId(), i+1, 3);
+            tableGame.setValueAt(Main.gameList.get(i).getRentalPrice(), i+1, 4);
+//            tableGame.setValueAt(Main.gameList.get(i).getRentedCopies(), i+1, 5);
+//            tableGame.setValueAt(Main.gameList.get(i).getAvailableCopies(), i+1, 6);
         }
-        
-
     }
-    
-    
-    
+    public void compSettingsDisplayStaffPanel() {               // Settings for Display staff panel.
+        lblDisplayStaffMenu.setFont(fontSubtext);
+        lblDisplayStaffMenu.setBounds(145,22,300,50);
+        lblDisplayStaffMenu.setForeground(colorWhite);
+        
+        tableStaff.revalidate();
+        tableStaff.repaint();
+        tableStaff.setDefaultEditor(Object.class, null);
+        tableStaff.setBounds(15,75,455,320);
+        tableStaff.getColumnModel().getColumn(0).setPreferredWidth(10);
+        
+        // Resetting table enteries:
+        for (int i = 0; i < 25; i++) {
+            tableStaff.setValueAt("", i, 0);
+            tableStaff.setValueAt("", i, 1);
+            tableStaff.setValueAt("", i, 2);
+        }
+
+        // Presetting headings:
+        tableStaff.setValueAt("SR", 0, 0);
+        tableStaff.setValueAt("NAME", 0, 1);
+        tableStaff.setValueAt("STAFF ID", 0, 2);
+        
+        // Populating the table with latest data:
+        for (int i = 0; i < Main.staffCounter + 1; i++) {
+            tableStaff.setValueAt(i+1, i+1, 0);
+            tableStaff.setValueAt(Main.staffList.get(i).getStaffName(), i+1, 1);
+            tableStaff.setValueAt(Main.staffList.get(i).getStaffId(), i+1, 2);
+        }
+    }
+    public void compSettingsRemoveStaffPanel() {                // Settings for Remove staff panel.
+        txtareaRemoveStaff.setBounds(45, 50, 400, 150);
+        txtareaRemoveStaff.setBackground(colorVeryBlue);
+        txtareaRemoveStaff.setForeground(colorWhite);
+        txtareaRemoveStaff.setFont(new Font("Calibri", 0, 16));
+        txtareaRemoveStaff.setLineWrap(true);
+        txtareaRemoveStaff.setWrapStyleWord(true);
+        txtareaRemoveStaff.setEditable(false);
+        txtareaRemoveStaff.setFocusable(false);
+        txtareaRemoveStaff.setText("BE ADVISED that this action will delete your account and its data entirely from the database. You will not be able to recover your deleted"
+                + " account and data, and you will have to register as a new staff account to access the system again.\n\nYou must understand the risk before attempting"
+                + " to delete your account, and own full responsibility of your actions.");
+        lblCaptcha.setBounds(100,225,350,30);
+        lblCaptcha.setText("I HAVE FULLY READ AND I FULLY AGREE");
+        lblCaptcha.setForeground(Color.RED);
+        lblCaptcha.setFont(fontSubtext);
+        lblRemovalMessage.setBounds(95,255,200,50);
+        lblRemovalMessage.setText("Fill in the above sentence here:");
+        lblRemovalMessage.setForeground(colorWhite);
+        txtfldCaptcha.setBounds(95,290,295,30);
+        txtfldCaptcha.setText("");
+        btnProceedRemoveStaff.setBounds(200, 360, 85, 25);
+    }
 }

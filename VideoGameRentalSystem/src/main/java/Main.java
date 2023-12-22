@@ -401,23 +401,12 @@ public class Main {
 //                                
 //                            case 2: // Remove a staff member.
 //                                flag2 = true;
-//                                System.out.println("        \nEnter ID of staff to delete its data:");
-//                                System.out.print("Enter staff ID: ");
+//                                System.out.println("        \nEnter username of staff to delete its data:");
+//                                System.out.print("Enter staff username: ");
 //                                scan.nextLine();
-//                                id = scan.nextLine();
+//                                String username = scan.nextLine();
 //                                
-//                                for (int i = 0; i < staffCounter + 1; i++) {
-//                                    Staff temp = staffList.get(i);
-//                                    String tempId = temp.getStaffId();
-//                                    
-//                                    if (tempId.equals(id)) {
-//                                        staffList.remove(i); // Removing object from staffList
-//                                        staffCounter--;
-//                                        flag1 = true;
-//                                        flag2 = false;
-//                                        break;
-//                                    }
-//                                }
+//                                removeStaff(username);
 //
 //                                choice2 = 0;
 //                                break;
@@ -732,6 +721,19 @@ public class Main {
         staffCounter++; // Incrementing the staff ArrayList index counter
         Staff tempStaffObj = new Staff(id, name, username, password); // Temporary object of staff
         staffList.add(staffCounter, tempStaffObj); // Appending temp to ArrayList of objects of staff
+    }
+    public static void removeStaff(String username) {
+        for (int i = 0; i < staffCounter + 1; i++) {
+            Staff temp = staffList.get(i);
+            String tempUsername = temp.getStaffUsername();
+            
+            if (tempUsername.equals(username)) {
+                staffList.remove(i);
+                staffCounter--;
+                flag1 = true;
+                flag2 = false;
+            }
+        }
     }
     
     

@@ -1,3 +1,5 @@
+// This class stores data about staff members.
+
 //FA22-BCS-114 Saad Shahzad
 //FA22-BCS-134 Haider Ali
 //FA22-BCS-135 Mohammad Faizan

@@ -1,12 +1,10 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Enum.java to edit this template
- */
+// This enum is being used in the Game class.
 
-/**
- *
- * @author Faizan
- */
+//FA22-BCS-114 Saad Shahzad
+//FA22-BCS-134 Haider Ali
+//FA22-BCS-135 Mohammad Faizan
+//Project Title: Video Game Rental System
+
 public enum Platform {
     XBOX, PS4
 }

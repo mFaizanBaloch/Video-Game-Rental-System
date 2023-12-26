@@ -1,3 +1,5 @@
+// This class stores data for video games.
+
 //FA22-BCS-114 Saad Shahzad
 //FA22-BCS-134 Haider Ali
 //FA22-BCS-135 Mohammad Faizan
@@ -8,10 +10,7 @@ public class Game {
     private int totalCopies;
     private Platform platform;
     
-//    private String pltf; // (to be changed to enum)
-//    private int rentedCopies, availableCopies; // (discarded)
-    
-    public Game(String gameId, String title, String pltf, int totalCopies, /*int rentedCopies,*/ String rentalPrice) {
+    public Game(String gameId, String title, String pltf, int totalCopies, String rentalPrice) {
         this.gameId = gameId;
         this.title = title;
         this.totalCopies = totalCopies;
@@ -23,10 +22,6 @@ public class Game {
         else if (pltf.equals("PS4")) {
             platform = Platform.PS4;
         }
-        
-//        this.pltf = pltf;
-//        this.rentedCopies = rentedCopies;
-//        availableCopies = totalCopies - rentedCopies;
     }
 
     public String getGameId() {
@@ -64,32 +59,6 @@ public class Game {
     public void setTotalCopies(int copies) {
         this.totalCopies = copies;   
     }
-    
-//    public int getRentedCopies() {
-//        return this.rentedCopies;
-//    }
-//    
-//    public void setRentedCopies(int rentedCopies) {
-//        this.rentedCopies = rentedCopies;   
-//    }
-//    
-//    public void incrementRentedCopies() {
-//        this.rentedCopies++;
-//        this.availableCopies--;
-//    }
-//
-//    public void decrementRentedCopies() {
-//        this.rentedCopies--;
-//        this.availableCopies++;
-//    }    
-//    
-//    public int getAvailableCopies() {
-//        return this.availableCopies;
-//    }
-//    
-//    public void setAvailableCopies(int availableCopies) {
-//        this.availableCopies = availableCopies;   
-//    }
     
     public String getRentalPrice() {
         return this.rentalPrice;

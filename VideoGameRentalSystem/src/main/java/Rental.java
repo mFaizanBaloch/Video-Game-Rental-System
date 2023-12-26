@@ -1,3 +1,5 @@
+// This class is used to store data about transactions.
+
 //FA22-BCS-114 Saad Shahzad
 //FA22-BCS-134 Haider Ali
 //FA22-BCS-135 Mohammad Faizan
@@ -71,8 +73,4 @@ public class Rental {
     public String toString() {
         return "\nCNIC: " + customerCnic + "\nGame ID: " + gameId + "\nStaff ID: " + staffId + "\nPurchase Date: " + purchase + "\nExpected Return: " + retrn + '\n';
     }
-    
-    
-    
-    
 }

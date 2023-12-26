@@ -1,3 +1,5 @@
+// This class holds functionalities and GUI for login/registration screen.
+
 //FA22-BCS-114 Saad Shahzad
 //FA22-BCS-134 Haider Ali
 //FA22-BCS-135 Mohammad Faizan
@@ -72,7 +74,6 @@ public class GUIinitial extends JFrame {
 
                     // Checking whether username already exists.
                     if (tempUsername.equals(txtfldUsername.getText())) {
-                        System.out.println("username already exists!");
                         JOptionPane.showMessageDialog(rootPane, "Username already exists! try again.", "", 0);
                         flag1 = true;
                         break;
@@ -106,6 +107,7 @@ public class GUIinitial extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 boolean flag1 = false;
                 Staff forActiveStaff = null;
+                
                 // Checking whether username and password match.
                 for (int i = 0; i < Main.staffCounter + 1; i++) {
                     Staff tempStaff = Main.staffList.get(i);
@@ -127,7 +129,8 @@ public class GUIinitial extends JFrame {
                     dispose();
                     GUImain guimain = new GUImain();
                     guimain.activeLogin = forActiveStaff; // This sets up the logged in member as active member.
-                } // If login fails.
+                }
+                // If login fails.
                 else if (!flag1) {
                     JOptionPane.showMessageDialog(rootPane, "Incorrect credentials!", "", 0);
                     txtfldUsername.setText("");
@@ -200,7 +203,6 @@ public class GUIinitial extends JFrame {
         panelLogin.add(btnSubmitLogin);
         panelLogin.add(btnRegisterScreen);
     }
-
     public void settingsForRegister() {
         panelRegister.setLayout(null);
         panelRegister.setVisible(true);

@@ -30,25 +30,38 @@ public class GUImain extends JFrame {
     
     Font fontSubtext;                                                                                               // for setting default font
     Color colorVeryBlue, colorWhite;                                                                                // VeryBlue for backgrounds, White for foregrounds
-    JPanel panelStats, panelAddGame, panelUpdateGame, panelRemoveGame, panelDisplayGame,
-            panelDisplayStaff, panelRemoveStaff;
+    JPanel panelDashboard, panelAddGame, panelUpdateGame, panelRemoveGame, panelDisplayGame,
+            panelDisplayStaff, panelRemoveStaff, panelAddCustomer, panelUpdateCustomer,
+            panelRemoveCustomer, panelDisplayCustomer, panelRental, panelReturn;
     JMenuBar menuBar;
-    JMenu menuMain, menuGame, menuStaff, menuCustomer, menuTransaction;
-    JMenuItem itemAddGame, itemUpdateGame, itemRemoveGame, itemDisplayGame, itemStats;                              // game menu + main menu items
-    JMenuItem itemDisplayStaff, itemRemoveStaff;                                                                    // staff menu items
-    JLabel lblTotalGame, lblTotalStaff, lblTotalCustomer, lblCompanyName, lblProjectName;                           // for stats panel
+    JMenu menuMain, menuGame, menuStaff, menuCustomer;
+    JMenuItem itemAddGame, itemUpdateGame, itemRemoveGame, itemDisplayGame, itemDashboard, itemRental, itemReturn;  // game menu + main menu items
+    JMenuItem itemDisplayStaff, itemRemoveStaff, itemLogoutStaff;                                                   // staff menu items
+    JMenuItem itemAddCustomer, itemUpdateCustomer, itemRemoveCustomer, itemDisplayCustomer;                         // customer menu items
+    JLabel lblTotalGame, lblTotalStaff, lblTotalCustomer, lblCompanyName, lblProjectName;                           // for dashboard panel
+    JLabel lblRentalMenu, lblRentedDays, lblIdOfStaff, lblCnicOfCustomer, lblIdOfGame;                              // for rental panel of main menu
+    JLabel lblReturnMenu, lblEnterSR;                                                                               // for return panel of main menu
     JLabel lblAddGameMenu, lblUpdateGameMenu, lblRemoveGameMenu, lblDisplayGameMenu;                                // for all submenus of game menu
     JLabel lblDisplayStaffMenu;                                                                                     // for all submenus of game menu
     JLabel lblGameId, lblGameTitle, lblGamePlatform, lblGameTotalCopies, lblGamePrice; /*, lblGameRentedCopies;*/   // for add game + update game panels
     JLabel lblValidateGame;                                                                                         // for update game + remove game panels
     JLabel lblRemovalMessage, lblCaptcha;                                                                           // for remove staff panel
+    JLabel lblAddCustomerMenu, lblUpdateCustomerMenu, lblRemoveCustomerMenu, lblDisplayCustomerMenu;                // for all submenus of customer menu 
+    JLabel lblCnic, lblCustomerName, lblValidateCustomer;                                                           // for add customer + update customer panels
+    JButton btnSubmitRentalTransaction, btnSubmitReturnTransaction;                                                 // submit buttons
     JButton btnSubmitAddGame, btnSubmitUpdateGame, btnSubmitRemoveGame;                                             // submit buttons
+    JButton btnSubmitAddCustomer, btnSubmitUpdateCustomer, btnSubmitRemoveCustomer; /*btnSubmitDisplayCustomer;*/   // submit buttons  
     JButton btnProceedRemoveStaff;                                                                                  // proceed buttons
     JTable tableGame = new JTable(25, 5);
     JTable tableStaff = new JTable(25,3);
+    JTable tableCustomer = new JTable(25,4);
+    JTable tableTransactions = new JTable(15, 6);
     JTextField txtfldGameId, txtfldGameTitle, txtfldGameTotalCopies, txtfldGamePrice, txtfldValidateGame;           // for add game + update game panels
             /*, txtfldGameRentedCopies, txtfldGamePlatform;*/
     JTextField txtfldCaptcha;                                                                                       // for remove staff panel
+    JTextField txtfldCnic, txtfldCustomerName, txtfldValidateCustomer;                                              // for add customer + update customer panels
+    JTextField txtfldCnicOfCustomer, txtfldIdOfStaff, txtfldIdOfGame, txtfldlRentedDays;                            // for rental transaction panel
+    JTextField txtfldSR;                                                                                            // for return panel of main menu
     JTextArea txtareaRemoveStaff;                                                                                   // for remove staff panel
     JRadioButton rdBtnPlatformXBOX, rdBtnPlatformPS4;                                                               // for add game + update game panels
     ButtonGroup platf = new ButtonGroup();                                                                          // for XBOX and PS4 choice radio buttons
@@ -61,8 +74,7 @@ public class GUImain extends JFrame {
         settingsMenuBar();      // Sets up Menu bar.
         panelSettingsStats();   // Sets up Stats panel (acts as summary page).
         
-
-
+        
         // JFRAME SETTINGS :
         super.setTitle("Video Game Rental");
         super.setDefaultCloseOperation(3);
@@ -70,24 +82,43 @@ public class GUImain extends JFrame {
         super.setResizable(false);
         super.setLayout(null);
         super.setLocationRelativeTo(null);
-        super.add(panelStats); 
+        super.add(panelDashboard); 
         super.setJMenuBar(menuBar);
         super.setVisible(true);
-        
-       
-
-        
+            
         
         // ACTION LISTENERS FOR SUBMENU BUTTONS :
-        itemStats.addActionListener(new ActionListener() {              // Calls Stats panel.
+        itemDashboard.addActionListener(new ActionListener() {              // Calls Dashboard panel.
             @Override
             public void actionPerformed(ActionEvent e) {
                 panelSettingsStats();
                 getContentPane().removeAll();
-                panelStats.setVisible(true);
-                add(panelStats);
-                panelStats.revalidate();
-                panelStats.repaint();
+                panelDashboard.setVisible(true);
+                add(panelDashboard);
+                panelDashboard.revalidate();
+                panelDashboard.repaint();
+            }
+        });
+        itemRental.addActionListener(new ActionListener() {            // Calls Rental panel.
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                panelSettingsRentalTransactions();
+                getContentPane().removeAll();
+                panelRental.setVisible(true);
+                add(panelRental);
+                panelRental.revalidate();
+                panelRental.repaint();
+            }
+        });
+        itemReturn.addActionListener(new ActionListener() {             // Calls Return panel.
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                panelSettingsReturn();
+                getContentPane().removeAll();
+                panelReturn.setVisible(true);
+                add(panelReturn);
+                panelReturn.revalidate();
+                panelReturn.repaint();
             }
         });
         itemAddGame.addActionListener(new ActionListener() {            // Calls Add game panel.
@@ -156,53 +187,243 @@ public class GUImain extends JFrame {
                 panelRemoveStaff.repaint();
             }
         });
-        
-        
+        itemLogoutStaff.addActionListener(new ActionListener() {        // Logs out the staff member, and calls login/register screen.
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int inp = JOptionPane.showConfirmDialog(rootPane, "Do you wish to log out of your account?", "", 0, 3);
+                if (inp == 0) {
+                    activeLogin = null;
+                    dispose();
+                    GUIinitial guiinitial = new GUIinitial(); // To call the login/register screen.
+                    JOptionPane.showMessageDialog(rootPane, "Your account was logged out.", "", 1);
+
+                }
+            }
+        });
+        itemAddCustomer.addActionListener(new ActionListener() {        // Calls Add customer panel.
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                panelSettingsAddCustomer();
+                getContentPane().removeAll();
+                panelAddCustomer.setVisible(true);
+                add(panelAddCustomer);
+                panelAddCustomer.revalidate();
+                panelAddCustomer.repaint();
+            }
+        });
+        itemUpdateCustomer.addActionListener(new ActionListener() {     // Calls Update customer panel.
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                panelSettingsUpdateCustomer();
+                getContentPane().removeAll();
+                panelUpdateCustomer.setVisible(true);
+                add(panelUpdateCustomer);
+                panelUpdateCustomer.revalidate();
+                panelUpdateCustomer.repaint();
+            }
+        });
+        itemRemoveCustomer.addActionListener(new ActionListener() {     // Calls Remove customer panel.
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                panelSettingsRemoveCustomer();
+                getContentPane().removeAll();
+                panelRemoveCustomer.setVisible(true);
+                add(panelRemoveCustomer);
+                panelRemoveCustomer.revalidate();
+                panelRemoveCustomer.repaint();
+            }
+        });
+        itemDisplayCustomer.addActionListener(new ActionListener() {    // Calls Display customer panel.
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                panelSettingsDisplayCustomer();
+                getContentPane().removeAll();
+                panelDisplayCustomer.setVisible(true);
+                add(panelDisplayCustomer);
+                panelDisplayCustomer.revalidate();
+                panelDisplayCustomer.repaint();
+            }
+        });
         
         
         // ACTION LISTENERS FOR ON-PANEL BUTTONS :
-        btnSubmitAddGame.addActionListener(new ActionListener() {       // Submit button to add a game.
+        btnSubmitRentalTransaction.addActionListener(new ActionListener() { // Submit button for making a rental.
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Converting String data to Integer:
-                int totalCopies = Integer.parseInt(txtfldGameTotalCopies.getText());
-//                int rentedCopies = Integer.parseInt(txtfldGameRentedCopies.getText());
-
-                // Passing user entered data, consequently creating a new object for gameList:
-
-                if (rdBtnPlatformXBOX.isSelected()) {
-                    Main.addVideoGame(txtfldGameId.getText(), txtfldGameTitle.getText(), 
-                        "XBOX",totalCopies, /*rentedCopies,*/ txtfldGamePrice.getText());
+                boolean flagC = false, flagS = false, flagG = false;
+                
+                // Checking whether there is a customer profile with entered cnic:
+                for (int i = 0; i < Main.customerCounter + 1; i++) {
+                    Customer temp = Main.customerList.get(i);
+                    String tempCnic = temp.getCnic();
+                    
+                    if (tempCnic.equals(txtfldCnicOfCustomer.getText())) {
+                        flagC = true;
+                        break;
+                    }
                 }
-                else if (rdBtnPlatformPS4.isSelected()) {
-                    Main.addVideoGame(txtfldGameId.getText(), txtfldGameTitle.getText(), 
-                        "PS4",totalCopies, /*rentedCopies,*/ txtfldGamePrice.getText());
+                
+                // Checking whether the staff id is of the active staff account:
+                if (activeLogin.getStaffId().equals(txtfldIdOfStaff.getText())) {
+                    flagS = true;
                 }
+                
+                // Checking whether there is a game with entered game id:
+                for (int i = 0; i < Main.gameCounter + 1; i++) {
+                    Game temp = Main.gameList.get(i);
+                    String tempId = temp.getGameId();
+                    
+                    if (tempId.equals(txtfldIdOfGame.getText())) {
+                        flagG = true;
+                        break;
+                    }
+                }
+                
+                // When all ids/cnics are correct, data is passed to function in main:
+                if (flagC && flagS && flagG) { 
+                    Main.makeRental(txtfldIdOfGame.getText(), txtfldCnicOfCustomer.getText(), txtfldIdOfStaff.getText(), txtfldlRentedDays.getText());
+                    System.out.println(Main.rentalList + "\n"); // (test display)
+                    
+                    // Incrementing customer's ongoing rentals:
+                    for (int i = 0; i < Main.customerCounter + 1; i++) {
+                        Customer temp = Main.customerList.get(i);
+                        String tempCnic = temp.getCnic();
 
-//                Main.addVideoGame(txtfldGameId.getText(), txtfldGameTitle.getText(), 
-//                        txtfldGamePlatform.getText(),totalCopies, /*rentedCopies,*/ txtfldGamePrice.getText());
-                System.out.println(Main.gameList + "\n"); // (test display)
-                // Resetting text fields, radio buttons and stats submenu labels:
-                txtfldGameId.setText("");
-                txtfldGameTitle.setText("");
-//                txtfldGamePlatform.setText("");
-                platf.clearSelection();
-                txtfldGameTotalCopies.setText("");
-//                txtfldGameRentedCopies.setText("");
-                txtfldGamePrice.setText("");
-                lblTotalGame.setText("Total Video Games: " + (Main.gameCounter + 1));
-                // Success notification:
-                JOptionPane.showMessageDialog(rootPane, "Game added successfully!", "", 1); 
-                // Calling Stats panel:
-                getContentPane().removeAll();
-                panelStats.setVisible(true);
-                add(panelStats);
-                panelStats.revalidate();
-                panelStats.repaint();
+                        if (tempCnic.equals(txtfldCnicOfCustomer.getText())) {
+                            temp.incrementOngoingRentals();
+                            Main.customerList.set(i, temp); // Replacing old data with updated data (ongoing rentals)
+                        }
+                    }
+
+                    // Success notfication:
+                    JOptionPane.showMessageDialog(lblRentalMenu, "Transaction succesful!", "", 1);
+                    // Resetting text fields:
+                    txtfldCnicOfCustomer.setText("");
+                    txtfldIdOfGame.setText("");
+                    txtfldIdOfStaff.setText("");
+                    txtfldlRentedDays.setText("");
+                    // Calling dashboard panel:
+                    getContentPane().removeAll();
+                    panelDashboard.setVisible(true);
+                    add(panelDashboard);
+                    panelDashboard.revalidate();
+                    panelDashboard.repaint();
+                }
+                
+                else {  // In case ids/cnic is not entered correctly.
+                    JOptionPane.showMessageDialog(lblRentalMenu, "Something went wrong! Data not correct.", "", 0);
+                }
+                
             }
         });
-        //////for game menu's update game menu:
-        btnSubmitUpdateGame.addActionListener(new ActionListener() {    // Submit button to update existing game.
+        btnSubmitReturnTransaction.addActionListener(new ActionListener() { // Submit button to make return transaction.
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                boolean flag1 = true;
+
+                // Confirmation to return the transaction:
+                JOptionPane.showMessageDialog(lblReturnMenu, "Make sure to collect payment and game from the customer!", "", 1);
+                int inp = JOptionPane.showConfirmDialog(lblReturnMenu, "Return the transaction?", "", 0, 2);
+                
+                if (inp == 0) {
+                    int indexFromSR = Integer.parseInt(txtfldSR.getText()) - 1; // Will be used to navigate rentalList.
+                    txtfldSR.setText("");
+                    for (int i = 0; i < Main.customerCounter + 1; i++) { // Will be used to decrement ongoing rentals from the customer.
+                        Customer temp = Main.customerList.get(i);
+                        String tempCnic = temp.getCnic();
+                        
+                        if (tempCnic.equals(Main.rentalList.get(indexFromSR).getCustomerCnic())) {
+                            temp.decrementOngoingRentals();
+                            Main.customerList.set(i, temp); // Replacing old data with updated data (ongoing rentals)
+                            
+                            System.out.println(Main.rentalList + "\n"); // (test display)
+                            Main.rentalList.remove(indexFromSR);
+                            System.out.println(Main.rentalList + "\n"); // (test display)
+                            
+                            Main.rentalCounter--;
+                            
+                            flag1 = false;
+                            break;
+                        }
+                    }
+                }
+                
+                if (!flag1) {
+                    // Success notfication:
+                    JOptionPane.showMessageDialog(lblReturnMenu, "Return succesful!", "", 1);
+                    // Resetting text fields:
+                    txtfldSR.setText("");
+                    // Calling dashboard panel:
+                    getContentPane().removeAll();
+                    panelDashboard.setVisible(true);
+                    add(panelDashboard);
+                    panelDashboard.revalidate();
+                    panelDashboard.repaint();
+                }
+                
+                if (flag1) {
+                    JOptionPane.showMessageDialog(lblReturnMenu, "Something went wrong! Try again", "", 0);
+                    txtfldSR.setText("");
+                }
+            }
+        });
+        btnSubmitAddGame.addActionListener(new ActionListener() {           // Submit button to add a game.
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                boolean flag1 = false;
+
+                for (int i = 0; i < Main.gameCounter + 1; i++) {
+                    Game tempGame = Main.gameList.get(i);
+                    String tempGameId = tempGame.getGameId();
+
+                    // Checking whether game id already exists.
+                    if (tempGameId.equals(txtfldGameId.getText())) {
+                        System.out.println("Game ID already exists in the database!");
+                        JOptionPane.showMessageDialog(rootPane, "Game ID already exists in the database! try again.", "", 0);
+                        flag1 = true;
+                        break;
+                    }
+                }
+
+                if (!flag1) {
+                    // Converting String data to Integer:
+                    int totalCopies = Integer.parseInt(txtfldGameTotalCopies.getText());
+//                    int rentedCopies = Integer.parseInt(txtfldGameRentedCopies.getText());
+
+                    // Passing user entered data, consequently creating a new object for gameList:
+                    if (rdBtnPlatformXBOX.isSelected()) {
+                        Main.addVideoGame(txtfldGameId.getText(), txtfldGameTitle.getText(), 
+                            "XBOX",totalCopies, /*rentedCopies,*/ txtfldGamePrice.getText());
+                    }
+                    else if (rdBtnPlatformPS4.isSelected()) {
+                        Main.addVideoGame(txtfldGameId.getText(), txtfldGameTitle.getText(), 
+                            "PS4",totalCopies, /*rentedCopies,*/ txtfldGamePrice.getText());
+                    }
+
+                    System.out.println(Main.gameList + "\n"); // (test display)
+
+                    // Resetting of text fields and game counter for dashboard panel:
+                    txtfldGameId.setText("");
+                    txtfldGameTitle.setText("");
+//                    txtfldGamePlatform.setText("");
+                    platf.clearSelection();
+                    txtfldGameTotalCopies.setText("");
+//                    txtfldGameRentedCopies.setText("");
+                    txtfldGamePrice.setText("");
+                    lblTotalGame.setText("Total Video Games: " + (Main.gameCounter + 1));
+                    
+                    // Success notification:
+                    JOptionPane.showMessageDialog(rootPane, "Game added successfully!", "", 1); 
+                    // Calling dashboard panel:
+                    getContentPane().removeAll();
+                    panelDashboard.setVisible(true);
+                    add(panelDashboard);
+                    panelDashboard.revalidate();
+                    panelDashboard.repaint();
+                }
+            }
+        });
+        btnSubmitUpdateGame.addActionListener(new ActionListener() {        // Submit button to update existing game.
         @Override
             public void actionPerformed(ActionEvent e) {
                 // Converting String data to Integer:
@@ -233,12 +454,12 @@ public class GUImain extends JFrame {
                 if (flagValidation) { // When game data is updated successfully.
                     System.out.println(Main.gameList + "\n"); // (test display)
                     JOptionPane.showMessageDialog(rootPane, "Updated successfully!", "", 1);    
-                    // Calling Stats panel:
+                    // Calling dashboard panel:
                     getContentPane().removeAll();
-                    panelStats.setVisible(true);
-                    add(panelStats);
-                    panelStats.revalidate();
-                    panelStats.repaint();
+                    panelDashboard.setVisible(true);
+                    add(panelDashboard);
+                    panelDashboard.revalidate();
+                    panelDashboard.repaint();
                 }
                 else if (!flagValidation){ // When game data could not be updated (error: incorrect game ID).
                     System.out.println("INVALID GAME ID\n");
@@ -246,7 +467,7 @@ public class GUImain extends JFrame {
                 } 
             }
         });
-        btnSubmitRemoveGame.addActionListener(new ActionListener() {    // Submit button for removing an existing game.
+        btnSubmitRemoveGame.addActionListener(new ActionListener() {        // Submit button for removing an existing game.
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Passing user entered data, consequently removing an existing object of gameList:
@@ -256,15 +477,15 @@ public class GUImain extends JFrame {
                 // Validation messages:
                 if (flagValidation) { // When game data is removed successfully.
                     System.out.println(Main.gameList + "\n"); // (test display)
-                    JOptionPane.showMessageDialog(rootPane,"Removed successfully!", "", 0);
-                    // Resetting Stats panel game label:
+                    JOptionPane.showMessageDialog(rootPane,"Removed successfully!", "", 1);
+                    // Resetting dashboard panel game label:
                     lblTotalGame.setText("Total Video Games: " + (Main.gameCounter + 1));
-                    // Calling Stats panel:
+                    // Calling dashboard panel:
                     getContentPane().removeAll();
-                    panelStats.setVisible(true);
-                    add(panelStats);
-                    panelStats.revalidate();
-                    panelStats.repaint();        
+                    panelDashboard.setVisible(true);
+                    add(panelDashboard);
+                    panelDashboard.revalidate();
+                    panelDashboard.repaint();        
                 }
                 else if (!flagValidation) { // error: incorrect game ID, hence could not be removed.
                     System.out.println("INVALID GAME ID\n");
@@ -272,7 +493,124 @@ public class GUImain extends JFrame {
                 }
             }
         });
-        btnProceedRemoveStaff.addActionListener(new ActionListener() {
+        btnSubmitAddCustomer.addActionListener(new ActionListener() {       // Submit button to add a new customer.
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                boolean flag1 = false;
+
+                for (int i = 0; i < Main.customerCounter + 1; i++) {
+                    Customer tempCustomer = Main.customerList.get(i);
+                    String tempCnin = tempCustomer.getCnic();
+
+                    // Checking whether cnic already exists.
+                    if (tempCnin.equals(txtfldCnic.getText())) {
+                        System.out.println("cnic already exists! customer profile exists already");
+                        JOptionPane.showMessageDialog(rootPane, "CNIC already registered with a profile! try again.", "", 0);
+                        flag1 = true;
+                        break;
+                    }
+                }
+
+                if (!flag1) {
+                    // Passing data to create a new customer object
+                    Main.addCustomer(txtfldCnic.getText(), txtfldCustomerName.getText());
+                    System.out.println(Main.customerList + "\n"); // (test display)  
+                    // Resetting of text fields and customer counter for dashboard panel:
+                    txtfldCnic.setText("");
+                    txtfldCustomerName.setText("");
+                    lblTotalCustomer.setText("Total Registered Customers: " + (Main.customerCounter + 1));
+                    // Success notification:
+                    JOptionPane.showMessageDialog(rootPane, "Customer profile registered successfully!", "", 1);
+                    // Calling dashboard panel:
+                    getContentPane().removeAll();
+                    panelDashboard.setVisible(true);
+                    add(panelDashboard);
+                    panelDashboard.revalidate();
+                    panelDashboard.repaint();
+                }   
+            }
+        });
+        btnSubmitUpdateCustomer.addActionListener(new ActionListener() {    // To update customer object.
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                boolean flag1 = true;
+                
+                for (int i = 0; i < Main.customerCounter + 1; i++) {
+                    Customer temp = Main.customerList.get(i);
+                    String tempCnic = temp.getCnic();
+                    
+                    if (tempCnic.equals(txtfldValidateCustomer.getText())) {
+                        System.out.println("CNIC found");
+                        flag1 = false;
+                        // Passing data to function in main, to update customer data:
+                        Main.updateCustomer(txtfldValidateCustomer.getText(), txtfldCustomerName.getText());
+                        System.out.println(Main.customerList + "\n"); // (test display)
+                        // Success notification:
+                        JOptionPane.showMessageDialog(rootPane, "Customer data has been updated!", "", 1);
+                        // Resetting of fields:
+                        txtfldCustomerName.setText("");
+                        txtfldValidateCustomer.setText("");
+                    }
+                }
+                
+                if (flag1) {
+                    // If profile is not found, a error message is shown.
+                    JOptionPane.showMessageDialog(rootPane, "Customer profile not found! Try again", "", 0);
+                }
+                
+                if (!flag1) {
+                    // Calling dashboard panel:
+                    getContentPane().removeAll();
+                    panelDashboard.setVisible(true);
+                    add(panelDashboard);
+                    panelDashboard.revalidate();
+                    panelDashboard.repaint();
+                }
+            }
+        });
+        btnSubmitRemoveCustomer.addActionListener(new ActionListener() {    // To remove a customer object.
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                boolean flag1 = true;
+                
+                for (int i = 0; i < Main.customerCounter + 1; i++) {
+                    Customer temp = Main.customerList.get(i);
+                    String tempCnic = temp.getCnic();
+                    
+                    if (tempCnic.equals(txtfldValidateCustomer.getText())) {
+                        // Passing data to function in main to remove the customer:
+                        Main.removeCustomer(txtfldValidateCustomer.getText());
+                        System.out.println(Main.customerList + "\n"); // (test display)
+                        // Success notification:
+                        JOptionPane.showMessageDialog(rootPane, "The customer profile has been deleted.", "", 1);
+                        flag1 = false;
+                    }
+                }
+                
+                if (flag1) {
+                    // When wrong CNIC is entered:
+                    JOptionPane.showMessageDialog(rootPane, "Entered CNIC not present in database! Try again.", "", 0);
+                }
+                
+                if (!flag1) {
+                    // Resetting dashboard panel customer label:
+                    lblTotalCustomer.setText("Total Registered Customers: " + (Main.customerCounter + 1));
+                    // Calling dashboard panel:
+                    getContentPane().removeAll();
+                    panelDashboard.setVisible(true);
+                    add(panelDashboard);
+                    panelDashboard.revalidate();
+                    panelDashboard.repaint();
+                }
+            }
+        });
+//        btnSubmitDisplayCustomer.addActionListener(new ActionListener() {    // To Display customer data.
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//            
+//            }
+//        });
+        btnProceedRemoveStaff.addActionListener(new ActionListener() {      // Proceed button to move to decide whether the acc will be deleted or not.
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (txtfldCaptcha.getText().equals("I HAVE FULLY READ AND I FULLY AGREE")) {
@@ -280,77 +618,80 @@ public class GUImain extends JFrame {
                     if (inp == 0) {
                         String passInp = JOptionPane.showInputDialog(rootPane, "Enter your password to delete your account (LAST CHANCE TO REVERT!)");
                         if (passInp.equals(activeLogin.getStaffPassword())) {
-                            Main.removeStaff(activeLogin.getStaffUsername());
-                            
-                            
+                            Main.removeStaff(activeLogin.getStaffUsername()); // Removes staff object from the list.
                             activeLogin = null;
                             dispose();
-                            GUIinitial guiinitial = new GUIinitial();
+                            GUIinitial guiinitial = new GUIinitial(); // To call the login/register screen.
                             JOptionPane.showMessageDialog(rootPane, "Your account was deleted.", "", 1);
                         }
                         else {
                             JOptionPane.showMessageDialog(rootPane, "Something went wrong!", "", 0);
                             getContentPane().removeAll();
-                            panelStats.setVisible(true);
-                            add(panelStats);
-                            panelStats.revalidate();
-                            panelStats.repaint();   
+                            panelDashboard.setVisible(true);
+                            add(panelDashboard);
+                            panelDashboard.revalidate();
+                            panelDashboard.repaint();   
                         }
                     }
                     else if (inp == 1) {
                         JOptionPane.showMessageDialog(rootPane, "Redirecting to main menu", "", 1);
                         getContentPane().removeAll();
-                        panelStats.setVisible(true);
-                        add(panelStats);
-                        panelStats.revalidate();
-                        panelStats.repaint();   
+                        panelDashboard.setVisible(true);
+                        add(panelDashboard);
+                        panelDashboard.revalidate();
+                        panelDashboard.repaint();   
                     }
                 }
                 else {
                     JOptionPane.showMessageDialog(rootPane, "Incorrect captcha!", "", 0);
                     txtfldCaptcha.setText("");
                 }
-                
-                
-                
             }       
         });
         
-        
-        
-        
-        
+
     } // END OF CONSTRUCTOR.
     
     
-    
-    
+
     
     
     // FUNCTIONS FOR INITIALIZATION :
     public void initMenuBar() {             // Initializes submenus for menubar.
         menuBar = new JMenuBar();
-        menuMain = new JMenu("Dashboard");
+        menuMain = new JMenu("Main");
         menuGame = new JMenu("Game");
         menuStaff = new JMenu("Staff");
         menuCustomer =  new JMenu("Customer");
-        menuTransaction = new JMenu("Transactions");    
         itemAddGame = new JMenuItem("Add");
         itemUpdateGame = new JMenuItem("Update");
         itemRemoveGame = new JMenuItem("Remove");
         itemDisplayGame = new JMenuItem("Inventory");
-        itemStats = new JMenuItem("Stats");
+        itemDashboard = new JMenuItem("Dashboard");
+        itemRental = new JMenuItem("Rental transaction");
+        itemReturn = new JMenuItem("Display and Return transactions");
         itemDisplayStaff = new JMenuItem("Display all members");
         itemRemoveStaff = new JMenuItem("Remove my account");
+        itemLogoutStaff = new JMenuItem("Logout");
+        itemAddCustomer = new JMenuItem("Add");
+        itemUpdateCustomer = new JMenuItem("Update");
+        itemRemoveCustomer = new JMenuItem("Remove");
+        itemDisplayCustomer = new JMenuItem("Display all");
     }
     public void initComponents() {          // Initializes all components and panels.
-        panelStats = new JPanel();
+        panelDashboard = new JPanel();
         panelAddGame = new JPanel();
         panelUpdateGame = new JPanel();
         panelRemoveGame = new JPanel();
         panelDisplayGame = new JPanel();
         panelDisplayStaff = new JPanel();
         panelRemoveStaff = new JPanel();
+        panelAddCustomer = new JPanel();
+        panelUpdateCustomer = new JPanel();
+        panelRemoveCustomer = new JPanel();
+        panelDisplayCustomer = new JPanel();
+        panelRental = new JPanel();
+        panelReturn = new JPanel();
         
         lblTotalGame = new JLabel("Total Video Games: " + (Main.gameCounter + 1));
         lblTotalStaff = new JLabel("Total Staff Members: " + (Main.staffCounter + 1));
@@ -371,6 +712,20 @@ public class GUImain extends JFrame {
         lblValidateGame = new JLabel();
         lblRemovalMessage = new JLabel();
         lblCaptcha = new JLabel();
+        lblAddCustomerMenu = new JLabel("Add new customer profile");
+        lblUpdateCustomerMenu = new JLabel("Update a customer's profile");
+        lblRemoveCustomerMenu = new JLabel("Remove a customer's profile");
+        lblDisplayCustomerMenu = new JLabel("Displaying customer profiles");
+        lblCnic = new JLabel("Enter Customer CNIC:");
+        lblCustomerName = new JLabel("Enter Customer Name:");
+        lblValidateCustomer = new JLabel();
+        lblRentalMenu = new JLabel("Make a Rental transaction");
+        lblRentedDays = new JLabel("Enter no. of days to rent:");
+        lblIdOfStaff = new JLabel("Staff ID of seller:");
+        lblIdOfGame = new JLabel("Game ID of game being sold:");
+        lblCnicOfCustomer = new JLabel("CNIC of buyer:");
+        lblEnterSR = new JLabel("Enter SR of transaction to return it:");
+        lblReturnMenu = new JLabel("Displaying transactions");
         
         txtfldGameId = new JTextField();
         txtfldGameTitle = new JTextField();
@@ -380,12 +735,26 @@ public class GUImain extends JFrame {
         txtfldGamePrice = new JTextField();
         txtfldValidateGame = new JTextField();
         txtfldCaptcha = new JTextField();
+        txtfldCnic = new JTextField();
+        txtfldCustomerName = new JTextField();
+        txtfldValidateCustomer = new JTextField();
+        txtfldCnicOfCustomer = new JTextField();
+        txtfldIdOfStaff = new JTextField();
+        txtfldIdOfGame = new JTextField();
+        txtfldlRentedDays = new JTextField();
+        txtfldSR = new JTextField();
         
         txtareaRemoveStaff = new JTextArea();
         
+        btnSubmitRentalTransaction = new JButton("Submit");
+        btnSubmitReturnTransaction = new JButton("Submit");
         btnSubmitAddGame = new JButton("Submit");
         btnSubmitUpdateGame = new JButton("Submit");
         btnSubmitRemoveGame = new JButton("Submit");
+        btnSubmitAddCustomer = new JButton("Submit");
+        btnSubmitUpdateCustomer = new JButton("Submit");
+        btnSubmitRemoveCustomer = new JButton("Submit");
+//        btnSubmitDisplayCustomer = new JButton("Submit");
         btnProceedRemoveStaff = new JButton("Proceed");
         
         rdBtnPlatformXBOX = new JRadioButton("XBOX");
@@ -404,34 +773,69 @@ public class GUImain extends JFrame {
     
     // FUNCTIONS FOR SETTINGS:
     public void settingsMenuBar() {                 // Settings for menubar.
-        menuMain.add(itemStats);
+        menuMain.add(itemDashboard);
+        menuMain.add(itemRental);
+        menuMain.add(itemReturn);
         menuGame.add(itemAddGame);
         menuGame.add(itemUpdateGame);
         menuGame.add(itemRemoveGame);
         menuGame.add(itemDisplayGame);
         menuStaff.add(itemDisplayStaff);
         menuStaff.add(itemRemoveStaff);
+        menuStaff.add(itemLogoutStaff);
+        menuCustomer.add(itemAddCustomer);
+        menuCustomer.add(itemUpdateCustomer);
+        menuCustomer.add(itemRemoveCustomer);
+        menuCustomer.add(itemDisplayCustomer);
         
         menuBar.add(menuMain);
         menuBar.add(menuGame);
         menuBar.add(menuStaff);
         menuBar.add(menuCustomer);
-        menuBar.add(menuTransaction);
         menuBar.setVisible(true);
     }
     public void panelSettingsStats() {              // Settings for Stats panel.
         compSettingsStatsPanel();
-        panelStats.setLayout(null);
-        panelStats.setVisible(true);
-        panelStats.setSize(500,480);
-        panelStats.setBackground(colorVeryBlue);
-        panelStats.add(lblTotalGame);
-        panelStats.add(lblTotalStaff);
-        panelStats.add(lblTotalCustomer);
-        panelStats.add(lblCompanyName);
-        panelStats.add(lblProjectName);
-    }    
-    public void panelSettingsAddGame() {            // Settings for Add game panel.  
+        panelDashboard.setLayout(null);
+        panelDashboard.setVisible(true);
+        panelDashboard.setSize(500,480);
+        panelDashboard.setBackground(colorVeryBlue);
+        panelDashboard.add(lblTotalGame);
+        panelDashboard.add(lblTotalStaff);
+        panelDashboard.add(lblTotalCustomer);
+        panelDashboard.add(lblCompanyName);
+        panelDashboard.add(lblProjectName);
+    }
+    public void panelSettingsRentalTransactions() {       // Settings for Rental panel.
+        compSettingsRentalPanel();
+        panelRental.setLayout(null);
+        panelRental.setVisible(true);
+        panelRental.setSize(500,480);
+        panelRental.setBackground(colorVeryBlue);
+        panelRental.add(lblRentalMenu);
+        panelRental.add(lblCnicOfCustomer);
+        panelRental.add(lblIdOfStaff);
+        panelRental.add(lblIdOfGame);
+        panelRental.add(lblRentedDays);
+        panelRental.add(txtfldCnicOfCustomer);
+        panelRental.add(txtfldIdOfStaff);
+        panelRental.add(txtfldIdOfGame);
+        panelRental.add(txtfldlRentedDays);
+        panelRental.add(btnSubmitRentalTransaction);
+    }
+    public void panelSettingsReturn() {                 // Settings for Return panel.
+        compSettingsReturnPanel();
+        panelReturn.setLayout(null);
+        panelReturn.setVisible(true);
+        panelReturn.setSize(500,480);
+        panelReturn.setBackground(colorVeryBlue);
+        panelReturn.add(lblReturnMenu);
+        panelReturn.add(tableTransactions);
+        panelReturn.add(lblEnterSR);
+        panelReturn.add(txtfldSR);
+        panelReturn.add(btnSubmitReturnTransaction);
+    }
+    public void panelSettingsAddGame() {                // Settings for Add game panel.  
         compSettingsAddGamePanel();
         panelAddGame.setLayout(null);
         panelAddGame.setVisible(false);
@@ -520,6 +924,53 @@ public class GUImain extends JFrame {
         panelRemoveStaff.add(txtareaRemoveStaff);
         panelRemoveStaff.add(btnProceedRemoveStaff);
     }
+    public void panelSettingsAddCustomer() {        // Settings for Add customer panel.
+        compSettingsAddCustomerPanel();
+        panelAddCustomer.setLayout(null);
+        panelAddCustomer.setVisible(false);
+        panelAddCustomer.setSize(500,480);
+        panelAddCustomer.setBackground(colorVeryBlue);
+        panelAddCustomer.add(lblAddCustomerMenu);
+        panelAddCustomer.add(lblCnic);
+        panelAddCustomer.add(lblCustomerName);
+        panelAddCustomer.add(txtfldCnic);
+        panelAddCustomer.add(txtfldCustomerName);
+        panelAddCustomer.add(btnSubmitAddCustomer);
+    }
+    public void panelSettingsUpdateCustomer() {     // Settings for Update customer panel.
+        compSettingsUpdateCustomerPanel();
+        panelUpdateCustomer.setLayout(null);
+        panelUpdateCustomer.setVisible(false);
+        panelUpdateCustomer.setSize(500,480);
+        panelUpdateCustomer.setBackground(colorVeryBlue);
+        panelUpdateCustomer.add(lblUpdateCustomerMenu);
+        panelUpdateCustomer.add(lblValidateCustomer);
+        panelUpdateCustomer.add(lblCustomerName);
+        panelUpdateCustomer.add(txtfldValidateCustomer);
+        panelUpdateCustomer.add(txtfldCustomerName);
+        panelUpdateCustomer.add(btnSubmitUpdateCustomer);
+    }
+    public void panelSettingsRemoveCustomer() {     // Settings for Remove customer panel.
+        compSettingsRemoveCustomerPanel();
+        panelRemoveCustomer.setLayout(null);
+        panelRemoveCustomer.setVisible(false);
+        panelRemoveCustomer.setSize(500,480);
+        panelRemoveCustomer.setBackground(colorVeryBlue);
+        panelRemoveCustomer.add(lblRemoveCustomerMenu);
+        panelRemoveCustomer.add(lblValidateCustomer);
+        panelRemoveCustomer.add(txtfldValidateCustomer);
+        panelRemoveCustomer.add(btnSubmitRemoveCustomer);
+    }
+    public void panelSettingsDisplayCustomer() {    // Settings for Display customer panel.
+        compSettingsDisplayCustomerPanel();
+        panelDisplayCustomer.setLayout(null);
+        panelDisplayCustomer.setVisible(false);
+        panelDisplayCustomer.setSize(500,480);
+        panelDisplayCustomer.setBackground(colorVeryBlue);
+        panelDisplayCustomer.add(lblDisplayCustomerMenu);
+        panelDisplayCustomer.add(tableCustomer);
+
+    }
     
     
     
@@ -527,7 +978,7 @@ public class GUImain extends JFrame {
     
     
     // FUNCTIONS FOR COMPONENT SETTINGS FOR DIFFERENT PANELS:
-     public void compSettingsStatsPanel() {                     // Settings for Stats panel.
+    public void compSettingsStatsPanel() {                     // Settings for Stats panel.
         lblTotalGame.setBounds(100,195,300,40);
         lblTotalGame.setForeground(colorWhite);
         lblTotalGame.setFont(new Font("Calibri", 0, 18));
@@ -543,6 +994,113 @@ public class GUImain extends JFrame {
         lblProjectName.setFont(fontSubtext);
         lblProjectName.setBounds(146,85,300,50);
         lblProjectName.setForeground(colorWhite);
+    }
+    public void compSettingsRentalPanel() {               // Settings for Transactions panel.
+        lblRentalMenu.setFont(fontSubtext);
+        lblRentalMenu.setBounds(145,22,250,50);
+        lblRentalMenu.setForeground(colorWhite);
+        lblCnicOfCustomer.setBounds(55, 110, 200, 25);
+        lblCnicOfCustomer.setForeground(colorWhite);
+        lblIdOfStaff.setBounds(55, 160, 200, 25);
+        lblIdOfStaff.setForeground(colorWhite);
+        lblIdOfGame.setBounds(55, 210, 200, 25);
+        lblIdOfGame.setForeground(colorWhite);        
+        lblRentedDays.setBounds(55, 260, 200, 25);        
+        lblRentedDays.setForeground(colorWhite);
+        txtfldCnicOfCustomer.setBounds(250, 110, 180, 25);
+        txtfldCnicOfCustomer.setText("");
+        txtfldIdOfStaff.setBounds(250, 160, 180, 25);
+        txtfldIdOfStaff.setText("");
+        txtfldIdOfGame.setBounds(250, 210, 180, 25);
+        txtfldIdOfGame.setText("");
+        txtfldlRentedDays.setBounds(250, 260, 180, 25);
+        txtfldlRentedDays.setText("");
+        btnSubmitRentalTransaction.setBounds(202, 360, 80, 25);
+    }
+    public void compSettingsReturnPanel() {             // Settings for Return panel.
+        lblReturnMenu.setFont(fontSubtext);
+        lblReturnMenu.setBounds(160,22,250,50);
+        lblReturnMenu.setForeground(colorWhite);
+        
+        lblEnterSR.setBounds(105, 320, 250, 25);
+        lblEnterSR.setForeground(colorWhite);
+        txtfldSR.setBounds(320, 320, 60, 25);
+        txtfldSR.setText("");
+        btnSubmitReturnTransaction.setBounds(200, 370, 80, 25);
+        
+        // Table settings:
+        tableTransactions.revalidate();
+        tableTransactions.repaint();
+        tableTransactions.setDefaultEditor(Object.class, null);
+        tableTransactions.setBounds(15,65,455,240);
+        tableTransactions.getColumnModel().getColumn(0).setPreferredWidth(5);
+//        tableTransactions.getColumnModel().getColumn(1).setPreferredWidth(10);
+//        tableTransactions.getColumnModel().getColumn(2).setPreferredWidth(10);
+//        tableTransactions.getColumnModel().getColumn(3).setPreferredWidth(10);
+        tableTransactions.getColumnModel().getColumn(4).setPreferredWidth(40);
+        tableTransactions.getColumnModel().getColumn(5).setPreferredWidth(20);
+        
+         // Resetting table enteries:
+        for (int i = 0; i < 15; i++) {
+            tableTransactions.setValueAt("", i, 0);
+            tableTransactions.setValueAt("", i, 1);
+            tableTransactions.setValueAt("", i, 2);
+            tableTransactions.setValueAt("", i, 3);
+            tableTransactions.setValueAt("", i, 4);
+            tableTransactions.setValueAt("", i, 5);
+        }
+
+        // Presetting headings:
+        tableTransactions.setValueAt("SR", 0, 0);
+        tableTransactions.setValueAt("GAME", 0, 1);
+        tableTransactions.setValueAt("CUSTOMER", 0, 2);
+        tableTransactions.setValueAt("STAFF", 0, 3);
+        tableTransactions.setValueAt("RETURN", 0, 4);
+        tableTransactions.setValueAt("PRICE", 0, 5);
+        
+        // Populating the table with latest data:
+        for (int i = 0; i < Main.rentalCounter + 1; i++) {
+            String gameTitle, customerName, staffName;
+            float price = 0;
+            
+            gameTitle = new String();
+            customerName = new String();
+            staffName = new String();
+            
+            for (int j = 0; j < Main.gameCounter + 1; j++) {    // Will fetch game's title against the entered game ID in rental class.
+                Game temp = Main.gameList.get(j);
+                String tempId = temp.getGameId();
+                if (tempId.equals(Main.rentalList.get(i).getGameId())) {
+                    gameTitle = temp.getTitle();
+                    int x = Integer.parseInt(Main.rentalList.get(i).getDays());
+                    int y = Integer.parseInt(temp.getRentalPrice());
+                    price = x * y;
+                }
+            }
+            
+            for (int j = 0; j < Main.staffCounter + 1; j++) {    // Will fetch staff's name against the entered staff ID in rental class.
+                Staff temp = Main.staffList.get(j);
+                String tempId = temp.getStaffId();
+                if (tempId.equals(Main.rentalList.get(i).getStaffId())) {
+                    staffName = temp.getStaffName();
+                }
+            }
+            
+            for (int j = 0; j < Main.customerCounter + 1; j++) {    // Will fetch customer's name against the entered CNIC in rental class.
+                Customer temp = Main.customerList.get(j);
+                String tempCnic = temp.getCnic();
+                if (tempCnic.equals(Main.rentalList.get(i).getCustomerCnic())) {
+                    customerName = temp.getName();
+                }
+            }
+            
+            tableTransactions.setValueAt(i+1, i+1, 0);
+            tableTransactions.setValueAt(gameTitle, i+1, 1);
+            tableTransactions.setValueAt(customerName, i+1, 2);
+            tableTransactions.setValueAt(staffName, i+1, 3);
+            tableTransactions.setValueAt(Main.rentalList.get(i).getRetrn(), i+1, 4);
+            tableTransactions.setValueAt(price, i+1, 5);
+        }
     }
     public void compSettingsAddGamePanel() {                    // Settings for Add game panel.
         lblAddGameMenu.setFont(fontSubtext);
@@ -634,7 +1192,7 @@ public class GUImain extends JFrame {
         tableGame.setDefaultEditor(Object.class, null);
 
         tableGame.setBounds(15,75,455,320);
-        tableGame.getColumnModel().getColumn(0).setPreferredWidth(200);
+        tableGame.getColumnModel().getColumn(0).setPreferredWidth(180);
 //        tableGame.getColumnModel().getColumn(1).setPreferredWidth(45);
         tableGame.getColumnModel().getColumn(2).setPreferredWidth(45);
 //        tableGame.getColumnModel().getColumn(3).setPreferredWidth(85);
@@ -724,4 +1282,83 @@ public class GUImain extends JFrame {
         txtfldCaptcha.setText("");
         btnProceedRemoveStaff.setBounds(200, 360, 85, 25);
     }
+    public void compSettingsAddCustomerPanel() {                // Settings for Add customer panel.                
+        lblAddCustomerMenu.setFont(fontSubtext);
+        lblAddCustomerMenu.setBounds(145,22,300,50);
+        lblAddCustomerMenu.setForeground(colorWhite);
+        lblCnic.setBounds(75, 150, 300, 25);
+        lblCnic.setForeground(colorWhite);
+        lblCustomerName.setBounds(75, 200, 300, 25);
+        lblCustomerName.setForeground(colorWhite);
+        txtfldCnic.setBounds(230, 150, 180, 25);
+        txtfldCnic.setText("");
+        txtfldCustomerName.setBounds(230, 200, 180, 25);
+        txtfldCustomerName.setText("");
+        btnSubmitAddCustomer.setBounds(200, 300, 80, 25);
+    }
+    public void compSettingsUpdateCustomerPanel() {             // Settings for Update customer panel.
+        lblUpdateCustomerMenu.setFont(fontSubtext);
+        lblUpdateCustomerMenu.setBounds(140,22,300,50);
+        lblUpdateCustomerMenu.setForeground(colorWhite);
+        lblValidateCustomer.setBounds(120, 110, 250, 25);
+        lblValidateCustomer.setForeground(colorWhite);
+        lblValidateCustomer.setText("Enter customer's CNIC to update their data:");
+        lblCustomerName.setBounds(75, 240, 160, 25);
+        lblCustomerName.setForeground(colorWhite);
+        txtfldValidateCustomer.setBounds(150, 140, 180, 25);
+        txtfldValidateCustomer.setText("");
+        txtfldCustomerName.setBounds(225, 240, 180, 25);
+        txtfldCustomerName.setText("");
+        btnSubmitUpdateCustomer.setBounds(200, 320, 80, 25);
+    }
+    public void compSettingsRemoveCustomerPanel() {             // Settings for Remove customer panel.
+        lblRemoveCustomerMenu.setFont(fontSubtext);
+        lblRemoveCustomerMenu.setBounds(140,22,300,50);
+        lblRemoveCustomerMenu.setForeground(colorWhite);
+        lblValidateCustomer.setBounds(120, 150, 250, 25);
+        lblValidateCustomer.setForeground(colorWhite);
+        lblValidateCustomer.setText("Enter customer's CNIC to update their data:");
+        txtfldValidateCustomer.setBounds(155, 190, 180, 25);
+        txtfldValidateCustomer.setText("");
+        btnSubmitRemoveCustomer.setBounds(200, 320, 80, 25);
+        
+    }
+    public void compSettingsDisplayCustomerPanel() {            // Settings for Display customer panel.
+        lblDisplayCustomerMenu.setFont(fontSubtext);
+        lblDisplayCustomerMenu.setBounds(145,22,300,50);
+        lblDisplayCustomerMenu.setForeground(colorWhite);
+        
+        tableCustomer.revalidate();
+        tableCustomer.repaint();
+        tableCustomer.setDefaultEditor(Object.class, null);
+        tableCustomer.setBounds(15,75,455,320);
+        tableCustomer.getColumnModel().getColumn(0).setPreferredWidth(10);
+        tableCustomer.getColumnModel().getColumn(3).setPreferredWidth(10);
+        
+        // Resetting table enteries:
+        for (int i = 0; i < 25; i++) {
+            tableCustomer.setValueAt("", i, 0);
+            tableCustomer.setValueAt("", i, 1);
+            tableCustomer.setValueAt("", i, 2);
+            tableCustomer.setValueAt("", i, 3);
+        }
+
+        // Presetting headings:
+        tableCustomer.setValueAt("SR", 0, 0);
+        tableCustomer.setValueAt("NAME", 0, 1);
+        tableCustomer.setValueAt("CNIC", 0, 2);
+        tableCustomer.setValueAt("RENTALS", 0, 3);
+        
+        // Populating the table with latest data:
+        for (int i = 0; i < Main.customerCounter + 1; i++) {
+            tableCustomer.setValueAt(i+1, i+1, 0);
+            tableCustomer.setValueAt(Main.customerList.get(i).getName(), i+1, 1);
+            tableCustomer.setValueAt(Main.customerList.get(i).getCnic(), i+1, 2);
+            tableCustomer.setValueAt(Main.customerList.get(i).getOngoingRentals(), i+1, 3);
+        }
+    }
+    
+    
+    
+    
 }

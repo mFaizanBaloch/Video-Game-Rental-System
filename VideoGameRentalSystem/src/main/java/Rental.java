@@ -6,43 +6,41 @@
 import java.time.LocalDate;
 
 public class Rental {
-    private String gameTitle, customerWhoBought, staffWhoSold;
+    private String gameId, customerCnic, staffId, days;
     private LocalDate purchase;
     private LocalDate retrn;
-    //date of purchase
-    //date of return
-    //days left
-
-    public Rental(String gameTitle, String customerWhoBought, String staffWhoSold, String days) {
-        this.gameTitle = gameTitle;
-        this.customerWhoBought = customerWhoBought;
-        this.staffWhoSold = staffWhoSold;
+    
+    public Rental(String gameId, String customerCnic, String staffId, String days) {
+        this.gameId = gameId;
+        this.customerCnic = customerCnic;
+        this.staffId = staffId;
         this.purchase = LocalDate.now();
+        this.days = days;
         this.retrn = LocalDate.of(purchase.getYear(), purchase.getMonth(), (purchase.getDayOfMonth() + Integer.parseInt(days)));
     }
 
-    public String getGameTitle() {
-        return staffWhoSold;
+    public String getGameId() {
+        return gameId;
     }
 
-    public void setGameTitle(String gameTitle) {
-        this.gameTitle = gameTitle;
+    public void setGameId(String gameId) {
+        this.gameId = gameId;
     }
 
-    public String getCustomerWhoBought() {
-        return staffWhoSold;
+    public String getCustomerCnic() {
+        return customerCnic;
     }
 
-    public void setCustomerWhoBought(String customerWhoBought) {
-        this.customerWhoBought = customerWhoBought;
+    public void setCustomerCnic(String customerCnic) {
+        this.customerCnic = customerCnic;
     }
 
-    public String getStaffWhoSold() {
-        return this.staffWhoSold;
+    public String getStaffId() {
+        return staffId;
     }
 
-    public void setStaffWhoSold(String staffWhoSold) {
-        this.staffWhoSold = staffWhoSold;
+    public void setStaffId(String staffId) {
+        this.staffId = staffId;
     }
 
     public LocalDate getPurchase() {
@@ -59,6 +57,19 @@ public class Rental {
 
     public void setRetrn(LocalDate retrn) {
         this.retrn = retrn;
+    }
+
+    public String getDays() {
+        return days;
+    }
+
+    public void setDays(String days) {
+        this.days = days;
+    }
+    
+    @Override
+    public String toString() {
+        return "\nCNIC: " + customerCnic + "\nGame ID: " + gameId + "\nStaff ID: " + staffId + "\nPurchase Date: " + purchase + "\nExpected Return: " + retrn + '\n';
     }
     
     

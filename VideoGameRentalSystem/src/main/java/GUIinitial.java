@@ -92,7 +92,7 @@ public class GUIinitial extends JFrame {
                     passfldPassword.setText("");
 
                     // Success notification:
-                    JOptionPane.showMessageDialog(rootPane, "Staff registered successfully!", "", 3);
+                    JOptionPane.showMessageDialog(rootPane, "Staff registered successfully!", "", 1);
                     settingsForLogin();
                     getContentPane().removeAll();
                     add(panelLogin);

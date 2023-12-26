@@ -3,19 +3,12 @@
 //FA22-BCS-135 Mohammad Faizan
 //Project Title: Video Game Rental System
 
-import java.util.ArrayList;
-
 public class Customer {
-    private String cnic, phoneNo, name;
+    private String cnic, name;
     private int ongoingRentals = 0;
-    static ArrayList<String> gamesRented;
-    static int counter = -1;
             
-    public Customer(String cnic, String phoneNo, int ongoingRentals, String name) {
-        gamesRented = new ArrayList<>();
+    public Customer(String cnic, String name) {
         this.cnic = cnic;
-        this.phoneNo = phoneNo;
-        this.ongoingRentals = ongoingRentals;
         this.name = name;
     }
 
@@ -27,30 +20,20 @@ public class Customer {
         this.cnic = cnic;
     }
 
-    public String getPhoneNo() {
-        return this.phoneNo;
-    }
-
-    public void setPhoneNo(String phoneNo) {
-        this.phoneNo = phoneNo;
-    }
-
     public int getOngoingRentals() {
-        return this.ongoingRentals;
+        return ongoingRentals;
     }
 
-// experimental         public void setOngoingRentals(int ongoingRentals) {
-//                          this.ongoingRentals = ongoingRentals;
-//                      }
+    public void setOngoingRentals(int ongoingRentals) {
+        this.ongoingRentals = ongoingRentals;
+    }
     
     public void incrementOngoingRentals() {
         this.ongoingRentals++;
-        this.counter++;
     }
     
     public void decrementOngoingRentals() {
         this.ongoingRentals--;
-        this.counter--;
     }
     
     public String getName() {
@@ -61,12 +44,8 @@ public class Customer {
         this.name = name;
     }
     
-    public void displayRentedGames() {
-        System.out.println(gamesRented);
-    }
-    
     @Override
     public String toString() {
-        return "Name: " + this.name + "\nCNIC: " + this.cnic + "\nPhone: " + this.phoneNo + "\nNo. of ongoing rentals: " + this.ongoingRentals + "\n";
+        return "\nName: " + this.name + "\nCNIC: " + this.cnic + "\nNo. of ongoing rentals: " + this.ongoingRentals + "\n";
     }
 }

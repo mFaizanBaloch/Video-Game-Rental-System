@@ -67,7 +67,11 @@ public class Game {
     public void setRentalPrice(String rentalPrice) {
         this.rentalPrice = rentalPrice;
     }
-
+    
+    public String getFormatedData() {
+        return (this.gameId + "|" + this.title + "|" + this.platform + "|" + this.totalCopies + "|" + this.rentalPrice + "|" + "\n");
+    }
+    
     @Override
     public String toString() {
         return "\nTitle: " + this.title + "\nPlatform: " + this.platform + "\nRental Price: " + this.rentalPrice

@@ -69,6 +69,10 @@ public class Rental {
         this.days = days;
     }
     
+    public String getFormatedData() {
+        return (this.gameId + "|" + this.customerCnic + "|" + this.staffId + "|" + this.purchase + "|" + this.retrn + "|" + this.days + "|" + "\n");
+    }
+    
     @Override
     public String toString() {
         return "\nCNIC: " + customerCnic + "\nGame ID: " + gameId + "\nStaff ID: " + staffId + "\nPurchase Date: " + purchase + "\nExpected Return: " + retrn + '\n';

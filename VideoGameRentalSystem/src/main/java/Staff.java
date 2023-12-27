@@ -47,6 +47,10 @@ public class Staff {
         this.staffPassword = staffPassword;
     }
     
+    public String getFormatedData() {
+        return (this.staffId + "|" + this.staffName + "|" + this.staffUsername + "|" + this.staffPassword + "|" + "\n");
+    }
+     
     @Override
     public String toString() {
         return "\nName: " + this.staffName + "\nID: " + this.staffId + "\nUsername: " + this.staffUsername + "\nPass: " + this.staffPassword + "\n";

@@ -293,11 +293,12 @@ public class GUImain extends JFrame {
                         if (tempCnic.equals(txtfldCnicOfCustomer.getText())) {
                             temp.incrementOngoingRentals();
                             Main.customerList.set(i, temp); // Replacing old data with updated data (ongoing rentals)
+                            Main.populateCustomersInFile(); // Customer ArrayList gets written in the file.
                         }
                     }
 
                     // Success notfication:
-                    JOptionPane.showMessageDialog(lblRentalMenu, "Transaction succesful!", "", 1);
+                    JOptionPane.showMessageDialog(rootPane, "Transaction succesful!", "", 1);
                     
                     // Resetting text fields:
                     txtfldCnicOfCustomer.setText("");
@@ -314,7 +315,7 @@ public class GUImain extends JFrame {
                 }
                 
                 else {  // In case ids/cnic is not entered correctly.
-                    JOptionPane.showMessageDialog(lblRentalMenu, "Something went wrong! Data not correct.", "", 0);
+                    JOptionPane.showMessageDialog(rootPane, "Something went wrong! Data not correct.", "", 0);
                 }
             }
         });
@@ -324,8 +325,8 @@ public class GUImain extends JFrame {
                 boolean flag1 = true;
 
                 // Confirmation to return the transaction:
-                JOptionPane.showMessageDialog(lblReturnMenu, "Make sure to collect payment and game from the customer!", "", 1);
-                int inp = JOptionPane.showConfirmDialog(lblReturnMenu, "Return the transaction?", "", 0, 2);
+                JOptionPane.showMessageDialog(rootPane, "Make sure to collect payment and game from the customer!", "", 1);
+                int inp = JOptionPane.showConfirmDialog(rootPane, "Return the transaction?", "", 0, 2);
                 
                 if (inp == 0) {
                     int indexFromSR = Integer.parseInt(txtfldSR.getText()) - 1; // Will be used to navigate rentalList.
@@ -344,6 +345,8 @@ public class GUImain extends JFrame {
                             
                             Main.rentalCounter--;
                             
+                            Main.populateRentalsInFile(); // Rental ArrayList gets written in the file.
+                            Main.populateCustomersInFile(); // Customer ArrayList gets written in the file.
                             flag1 = false;
                             break;
                         }
@@ -352,7 +355,7 @@ public class GUImain extends JFrame {
                 
                 if (!flag1) {
                     // Success notfication:
-                    JOptionPane.showMessageDialog(lblReturnMenu, "Return succesful!", "", 1);
+                    JOptionPane.showMessageDialog(rootPane, "Return succesful!", "", 1);
                     
                     // Resetting text fields:
                     txtfldSR.setText("");
@@ -366,7 +369,7 @@ public class GUImain extends JFrame {
                 }
                 
                 if (flag1) {
-                    JOptionPane.showMessageDialog(lblReturnMenu, "Something went wrong! Try again", "", 0);
+                    JOptionPane.showMessageDialog(rootPane, "Something went wrong! Try again", "", 0);
                     txtfldSR.setText("");
                 }
             }
@@ -470,29 +473,38 @@ public class GUImain extends JFrame {
         btnSubmitRemoveGame.addActionListener(new ActionListener() {        // Submit button for removing an existing game.
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Passing user entered data, consequently removing an existing object of gameList:
-                Main.removeVideoGame(txtfldValidateGame.getText());
-                
-                // Resetting text field
-                txtfldValidateGame.setText("");
-                
-                // Validation messages:
-                if (flagValidation) { // When game data is removed successfully.
-                    System.out.println(Main.gameList + "\n"); // (test display)
-                    JOptionPane.showMessageDialog(rootPane,"Removed successfully!", "", 1);
-                    
-                    // Resetting dashboard panel game label:
-                    lblTotalGame.setText("Total Video Games: " + (Main.gameCounter + 1));
-                    
-                    // Calling dashboard panel:
-                    getContentPane().removeAll();
-                    panelDashboard.setVisible(true);
-                    add(panelDashboard);
-                    panelDashboard.revalidate();
-                    panelDashboard.repaint();        
+                int inp = JOptionPane.showConfirmDialog(rootPane, "Do you really wish to remove this game?", "", 0, 2);
+
+                if (inp == 0) {
+                    // Passing user entered data, consequently removing an existing object of gameList:
+                    Main.removeVideoGame(txtfldValidateGame.getText());
+
+                    // Resetting text field
+                    txtfldValidateGame.setText("");
+
+                    // Validation messages:
+                    if (flagValidation) { // When game data is removed successfully.
+                        System.out.println(Main.gameList + "\n"); // (test display)
+                        JOptionPane.showMessageDialog(rootPane,"Removed successfully!", "", 1);
+
+                        // Resetting dashboard panel game label:
+                        lblTotalGame.setText("Total Video Games: " + (Main.gameCounter + 1));
+
+                        // Calling dashboard panel:
+                        getContentPane().removeAll();
+                        panelDashboard.setVisible(true);
+                        add(panelDashboard);
+                        panelDashboard.revalidate();
+                        panelDashboard.repaint();        
+                    }
+                    else if (!flagValidation) { // error: incorrect game ID, hence could not be removed.
+                        JOptionPane.showMessageDialog(rootPane, "Remove failed! Please enter correct game ID", "", 0); 
+                    }
                 }
-                else if (!flagValidation) { // error: incorrect game ID, hence could not be removed.
-                    JOptionPane.showMessageDialog(rootPane, "Remove failed! Please enter correct game ID", "", 0); 
+                
+                else if (inp == 1) {
+                    JOptionPane.showMessageDialog(rootPane, "Nothing was removed.", "", 1);
+                    txtfldValidateGame.setText("");
                 }
             }
         });
@@ -578,38 +590,48 @@ public class GUImain extends JFrame {
         btnSubmitRemoveCustomer.addActionListener(new ActionListener() {    // To remove a customer object.
             @Override
             public void actionPerformed(ActionEvent e) {
-                boolean flag1 = true;
                 
-                for (int i = 0; i < Main.customerCounter + 1; i++) {
-                    Customer temp = Main.customerList.get(i);
-                    String tempCnic = temp.getCnic();
-                    
-                    if (tempCnic.equals(txtfldValidateCustomer.getText())) {
-                        // Passing data to function in main to remove the customer:
-                        Main.removeCustomer(txtfldValidateCustomer.getText());
-                        System.out.println(Main.customerList + "\n"); // (test display)
-                        
-                        // Success notification:
-                        JOptionPane.showMessageDialog(rootPane, "The customer profile has been deleted.", "", 1);
-                        flag1 = false;
+                int inp = JOptionPane.showConfirmDialog(rootPane, "Do you want to remove this customer profile?", "", 0, 3);
+                
+                if (inp == 0) {
+                    boolean flag1 = true;
+                
+                    for (int i = 0; i < Main.customerCounter + 1; i++) {
+                        Customer temp = Main.customerList.get(i);
+                        String tempCnic = temp.getCnic();
+
+                        if (tempCnic.equals(txtfldValidateCustomer.getText())) {
+                            // Passing data to function in main to remove the customer:
+                            Main.removeCustomer(txtfldValidateCustomer.getText());
+                            System.out.println(Main.customerList + "\n"); // (test display)
+
+                            // Success notification:
+                            JOptionPane.showMessageDialog(rootPane, "The customer profile has been deleted.", "", 1);
+                            flag1 = false;
+                        }
+                    }
+
+                    if (flag1) {
+                        // When wrong CNIC is entered:
+                        JOptionPane.showMessageDialog(rootPane, "Entered CNIC not present in database! Try again.", "", 0);
+                    }
+
+                    if (!flag1) {
+                        // Resetting dashboard panel customer label:
+                        lblTotalCustomer.setText("Total Registered Customers: " + (Main.customerCounter + 1));
+
+                        // Calling dashboard panel:
+                        getContentPane().removeAll();
+                        panelDashboard.setVisible(true);
+                        add(panelDashboard);
+                        panelDashboard.revalidate();
+                        panelDashboard.repaint();
                     }
                 }
                 
-                if (flag1) {
-                    // When wrong CNIC is entered:
-                    JOptionPane.showMessageDialog(rootPane, "Entered CNIC not present in database! Try again.", "", 0);
-                }
-                
-                if (!flag1) {
-                    // Resetting dashboard panel customer label:
-                    lblTotalCustomer.setText("Total Registered Customers: " + (Main.customerCounter + 1));
-                    
-                    // Calling dashboard panel:
-                    getContentPane().removeAll();
-                    panelDashboard.setVisible(true);
-                    add(panelDashboard);
-                    panelDashboard.revalidate();
-                    panelDashboard.repaint();
+                else if (inp == 1) {
+                    JOptionPane.showMessageDialog(rootPane, "Nothing was removed.", "", 1);
+                    txtfldValidateCustomer.setText("");
                 }
             }
         });
@@ -666,17 +688,17 @@ public class GUImain extends JFrame {
         itemAddGame = new JMenuItem("Add");
         itemUpdateGame = new JMenuItem("Update");
         itemRemoveGame = new JMenuItem("Remove");
-        itemDisplayGame = new JMenuItem("Inventory");
+        itemDisplayGame = new JMenuItem("Game Inventory");
         itemDashboard = new JMenuItem("Dashboard");
-        itemRental = new JMenuItem("Rental transaction");
-        itemReturn = new JMenuItem("Display and Return transactions");
-        itemDisplayStaff = new JMenuItem("Display all members");
-        itemRemoveStaff = new JMenuItem("Remove my account");
+        itemRental = new JMenuItem("Make a Rental");
+        itemReturn = new JMenuItem("Display or Return");
+        itemDisplayStaff = new JMenuItem("Display Members");
+        itemRemoveStaff = new JMenuItem("Remove my Account");
         itemLogoutStaff = new JMenuItem("Logout");
         itemAddCustomer = new JMenuItem("Add");
         itemUpdateCustomer = new JMenuItem("Update");
         itemRemoveCustomer = new JMenuItem("Remove");
-        itemDisplayCustomer = new JMenuItem("Display all");
+        itemDisplayCustomer = new JMenuItem("Display Profiles");
     }
     public void initComponents() {          // Initializes all components and panels.
         panelDashboard = new JPanel();

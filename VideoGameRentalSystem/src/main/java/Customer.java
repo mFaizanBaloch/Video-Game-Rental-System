@@ -46,6 +46,10 @@ public class Customer {
         this.name = name;
     }
     
+    public String getFormatedData() {
+        return (this.cnic + "|" + this.name + "|" + this.ongoingRentals + "|" + "\n");
+    }
+    
     @Override
     public String toString() {
         return "\nName: " + this.name + "\nCNIC: " + this.cnic + "\nNo. of ongoing rentals: " + this.ongoingRentals + "\n";

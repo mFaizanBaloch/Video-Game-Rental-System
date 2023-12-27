@@ -18,7 +18,7 @@ public class Rental {
         this.staffId = staffId;
         this.purchase = LocalDate.now();
         this.days = days;
-        this.retrn = LocalDate.of(purchase.getYear(), purchase.getMonth(), (purchase.getDayOfMonth() + Integer.parseInt(days)));
+        this.retrn = purchase.plusDays(Integer.parseInt(days));
     }
 
     public String getGameId() {

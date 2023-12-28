@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.BufferedReader;
 import java.io.IOException;
 
 public class Main {
@@ -271,5 +273,34 @@ public class Main {
         }
     }
 
+    public static void loadGamesFromFile() {
+        try {
+            gameFile = new File("logs/gameData.txt");
+        
+            if (!gameFile.exists()) {
+                gameFile.createNewFile();
+            }
+        
+            FileReader fr = new FileReader(gameFile);
+            BufferedReader br = new BufferedReader(fr);
+            
+            
+            String line;
 
+            while ((line = br.readLine()) != null) {
+                String parts[] = line.split("|");
+                
+            }
+        
+            
+            
+        }
+        
+        catch (IOException e) {
+            System.out.println("Could not load ArrayList to gameFile!");
+        }
+        
+        
+    
+    }
 }

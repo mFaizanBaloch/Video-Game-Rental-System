@@ -1,4 +1,4 @@
-# Semester Project : Video Game Rental System (Console based)
+# Semester Project : Video Game Rental Management System
 This project is a management system for shopkeepers that deal in Video Game rentals. Developed in Java using OOP concepts, with a menu-driven approach to make things easy for end-user.
 
 **Code Components:**
